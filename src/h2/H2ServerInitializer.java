@@ -13,7 +13,7 @@ import org.h2.tools.Server;
 @WebListener
 public class H2ServerInitializer implements ServletContextListener {
     private static Server server; // H2サーバーインスタンス
-    private static final String JDBC_URL = "jdbc:h2:tcp://localhost:9092/~/book"; // H2DBのパス
+    private static final String JDBC_URL = "jdbc:h2:tcp://localhost:9092/~/seisaku"; // H2DBのパス
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 

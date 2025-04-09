@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 public class H2Init {
     // H2データベースのファイル保存パス
-	private static final String JDBC_URL = "jdbc:h2:~/book"; //
+	private static final String JDBC_URL = "jdbc:h2:~/seisaku"; //
 	private static final String USER = "sa";
 	private static final String PASSWORD = "";
 
