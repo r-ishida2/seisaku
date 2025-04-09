@@ -16,9 +16,12 @@ public class H2DataChecker {
         try (Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
              Statement stmt = conn.createStatement()) {
 
-            checkTable(stmt, "product");
-            checkTable(stmt, "customer");
-            checkTable(stmt, "purchase");
+            checkTable(stmt, "class_num");
+            checkTable(stmt, "school");
+            checkTable(stmt, "student");
+            checkTable(stmt, "subject");
+            checkTable(stmt, "teacher");
+            checkTable(stmt, "test");
 
         } catch (SQLException e) {
             e.printStackTrace();
