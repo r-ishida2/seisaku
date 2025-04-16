@@ -11,7 +11,7 @@
     <label for="showPassword">
     <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()" name="chk_d_ps">
     </label>
-    <input type="button" value="ログイン">
+    <input type="submit" value="ログイン">
     </form>
 </div>
 <%@ include file="footer.jsp" %>

@@ -16,6 +16,6 @@
 <!-- 上部タイトルエリア -->
 <div class="header-wrapper">
     <h1>得点管理システム</h1>
-    <span>ユーザー名様</span>
+    <p>${user.id}様</p>
     <a href="<c:url value='/main/logout.jsp'/>">ログアウト</a>
 </div>
