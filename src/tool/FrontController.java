@@ -24,7 +24,6 @@ public class FrontController extends HttpServlet {
     public void doPost(
         HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-    	System.out.println("Frontcontroller!");
         PrintWriter out = response.getWriter();
         try {
             // ① リクエストされたURLのパスを取得
