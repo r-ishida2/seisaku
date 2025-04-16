@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 
 public class Dao {
     // 🔹 静的なデータソース（1回だけ取得して使い回す）
-    private DataSource ds;
+    static DataSource ds;
 
     /**
      * 📡 データベースへのコネクション取得メソッド
