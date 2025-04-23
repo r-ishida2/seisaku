@@ -5,6 +5,6 @@
 <div class="main-container">
 <h2>ログアウト</h2>
 <p>ログアウトしました</p>
-<a href="<c:url value='../login.jsp'/>">ログイン</a>
+<a href="<c:url value='scoremanager.Login.action'/>">ログイン</a>
 </div>
 <%@ include file="../footer.jsp" %>

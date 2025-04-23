@@ -1,16 +1,36 @@
-<!DOCTYPE configuration>
-<!-- 上記はEclipseの警告を消すための記述です。 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://xmlns.jcp.org/xml/ns/javaee
+                      https://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
 
-<Context reloadable="true">
-	<Resource
-    	name="jdbc/book"
-    	auth="Container"
-    	type="javax.sql.DataSource"
-    	driverClassName="org.h2.Driver"
-    	url="jdbc:h2:tcp://localhost:9092/~/seisaku"
-    	username="sa"
-    	password=""
-	/>
+	<!-- コンテキストルートのウェルカムページを設定 -->
+	<welcome-file-list>
+		<welcome-file>scoremanager.Login.action</welcome-file>
+	</welcome-file-list>
 
-	<!-- 		url="jdbc:h2:tcp://localhost/~/seisaku" -->
-</Context>
+	<!-- <listener> -->
+	<!-- <listener-class>h2.H2ServerInitializer</listener-class> -->
+	<!-- </listener> -->
+
+	<!-- （ここから↓）次の内容をweb.xmlに追加する -->
+	<!-- <filter> -->
+	<!-- <filter-name>hellofilter</filter-name> -->
+	<!-- <filter-class>chapter10.HelloFilter</filter-class> -->
+	<!-- </filter> -->
+	<!-- <filter-mapping> -->
+	<!-- <filter-name>hellofilter</filter-name> -->
+	<!-- <url-pattern>/chapter3/hello</url-pattern> -->
+	<!-- </filter-mapping> -->
+
+	<!-- <filter> -->
+	<!-- <filter-name>hellofilter2</filter-name> -->
+	<!-- <filter-class>chapter10.HelloFilter2</filter-class> -->
+	<!-- </filter> -->
+	<!-- <filter-mapping> -->
+	<!-- <filter-name>hellofilter2</filter-name> -->
+	<!-- <url-pattern>/chapter3/hello</url-pattern> -->
+	<!-- </filter-mapping> -->
+	<!-- （ここまで↑）次の内容をweb.xmlに追加する -->
+
+</web-app>
