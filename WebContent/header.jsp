@@ -16,6 +16,8 @@
 <!-- 上部タイトルエリア -->
 <div class="header-wrapper">
     <h1>得点管理システム</h1>
-    <p>${NAME.name}様</p>
-    <a href="<c:url value='/scoremanager/main/Logout.action'/>">ログアウト</a>
+	<c:if test="${not empty sessionScope.NAME}">
+		<p>${NAME.name}様</p>
+	    <a href="<c:url value='/scoremanager/main/Logout.action'/>">ログアウト</a>
+	</c:if>
 </div>
