@@ -31,6 +31,5 @@
     </form>
     <a href="<c:url value='/xxxx'/>">戻る</a>
     </div>
-
 </div>
 <%@ include file="../footer.jsp" %>
