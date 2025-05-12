@@ -22,7 +22,7 @@ public class StudentListAction extends Action {
 
         if (teacher == null) {
             // 未ログインの場合はログイン画面へリダイレクト
-            return "login.jsp";
+            return "/login.jsp";
         }
 
         // 教員の所属する学校を取得
@@ -36,6 +36,6 @@ public class StudentListAction extends Action {
         request.setAttribute("students", studentList);
 
         // 表示用のJSPへ遷移
-        return "student_list.jsp";
+        return "/main/student_list.jsp";
     }
 }

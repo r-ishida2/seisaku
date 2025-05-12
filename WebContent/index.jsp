@@ -17,7 +17,7 @@
     <div class="content-container">
     <h2>メニュー</h2>
         <ul class="nav">
-		<li><a href="<c:url value='/xxxx'/>">学生管理</a></li>
+		<li><a href="<c:url value='scoremanager/main/StudentList.action'/>">学生管理</a></li>
 		<li>成績管理</li>
 		<li><a href="<c:url value='/xxxx'/>">成績登録</a></li>
 		<li><a href="<c:url value='/xxxx'/>">成績参照</a></li>

@@ -29,17 +29,17 @@
 		</form>
 
 		<c:choose>
-			<c:when  test="${student_list>0}">
-				<div>検索結果:${student_list.size()}件</div>
+			<c:when  test="${students.size() >0}">
+				<div>検索結果:${students.size()}件</div>
 				<table style="border-collapse:separate;border-spacing:10px;">
-				<c:forEach var="item" items="${student_list}">
+				<c:forEach var="item" items="${students}">
 					<tr>
-					<td>${item.product.id}</td>
-					<td>${item.product.num}</td>
-					<td>${item.product.name}</td>
-					<td>${item.product.class}</td>
-					<td>${item.product.now}</td>
-					<td><a href="StudentChange.action?id=${item.product.id}">変更</a></td>
+					<td>${item.id}</td>
+					<td>${item.num}</td>
+					<td>${item.name}</td>
+					<td>${item.class}</td>
+					<td>${item.now}</td>
+					<td><a href="StudentChange.action?id=${item.id}">変更</a></td>
 					</tr>
 				</c:forEach>
 				</table>
