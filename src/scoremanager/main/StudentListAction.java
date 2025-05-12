@@ -18,7 +18,7 @@ public class StudentListAction extends Action {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // セッションからログイン中の教員情報を取得
         HttpSession session = request.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         if (teacher == null) {
             // 未ログインの場合はログイン画面へリダイレクト
