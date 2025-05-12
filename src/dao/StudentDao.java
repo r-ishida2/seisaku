@@ -9,10 +9,9 @@ import java.util.List;
 import bean.School;
 import bean.Student;
 
-
 public class StudentDao extends Dao {
 
-    String baseSql = "SELECT * FROM STUDENT WHERE ";
+    private final String BASE_SQL = "SELECT * FROM STUDENT WHERE ";
 
     // 学生1人取得
     public Student get(String no) {
@@ -25,7 +24,7 @@ public class StudentDao extends Dao {
 
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                student = postFilter(rs, null); // 学校情報はnull可
+                student = postFilter(rs, null); // 学校情報はnullでも可
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,11 +33,11 @@ public class StudentDao extends Dao {
         return student;
     }
 
-    // フィルタ（学校＋年度＋クラス＋在籍）
+    // 学生一覧取得（学校 + 年度 + クラス + 在籍）
     public List<Student> filter(School school, int entYear, String classNum, boolean isAttend) {
         List<Student> list = new ArrayList<>();
+        String sql = BASE_SQL + "school_cd = ? AND ent_year = ? AND class_num = ? AND is_attend = ?";
 
-        String sql = baseSql + "school_cd = ? AND ent_year = ? AND class_num = ? AND is_attend = ?";
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
 
@@ -51,6 +50,7 @@ public class StudentDao extends Dao {
             while (rs.next()) {
                 list.add(postFilter(rs, school));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,11 +58,11 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    // フィルタ（学校＋年度＋在籍）
+    // 学生一覧取得（学校 + 年度 + 在籍）
     public List<Student> filter(School school, int entYear, boolean isAttend) {
         List<Student> list = new ArrayList<>();
+        String sql = BASE_SQL + "school_cd = ? AND ent_year = ? AND is_attend = ?";
 
-        String sql = baseSql + "school_cd = ? AND ent_year = ? AND is_attend = ?";
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
 
@@ -74,6 +74,7 @@ public class StudentDao extends Dao {
             while (rs.next()) {
                 list.add(postFilter(rs, school));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,11 +82,11 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    // フィルタ（学校＋在籍）
+    // 学生一覧取得（学校 + 在籍）
     public List<Student> filter(School school, boolean isAttend) {
         List<Student> list = new ArrayList<>();
+        String sql = BASE_SQL + "school_cd = ? AND is_attend = ?";
 
-        String sql = baseSql + "school_cd = ? AND is_attend = ?";
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
 
@@ -96,6 +97,7 @@ public class StudentDao extends Dao {
             while (rs.next()) {
                 list.add(postFilter(rs, school));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +105,7 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    // 学生の保存（INSERT or UPDATE）
+    // 学生情報保存（REPLACE INTO = INSERT or UPDATE）
     public boolean save(Student student) {
         boolean result = false;
 
@@ -111,6 +113,7 @@ public class StudentDao extends Dao {
             String sql = "REPLACE INTO STUDENT(no, name, ent_year, class_num, is_attend, school_cd) "
                        + "VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement st = con.prepareStatement(sql);
+
             st.setString(1, student.getNo());
             st.setString(2, student.getName());
             st.setInt(3, student.getEntYear());
@@ -120,6 +123,7 @@ public class StudentDao extends Dao {
 
             int count = st.executeUpdate();
             result = (count == 1);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,8 +131,8 @@ public class StudentDao extends Dao {
         return result;
     }
 
-    // ResultSet → Student 変換処理
-    public Student postFilter(ResultSet rs, School school) {
+    // ResultSet → Student オブジェクト変換処理
+    private Student postFilter(ResultSet rs, School school) {
         Student s = new Student();
         try {
             s.setNo(rs.getString("no"));
@@ -140,11 +144,11 @@ public class StudentDao extends Dao {
             if (school != null) {
                 s.setSchool(school);
             } else {
-                // 必要なら SchoolDao を使って School を取得してもよい
                 School sch = new School();
                 sch.setCd(rs.getString("school_cd"));
                 s.setSchool(sch);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
