@@ -3,48 +3,38 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+
+import bean.School;
 
 public class SchoolDao extends Dao {
 
     /**
-     * 指定された学校コードに紐づくクラス番号一覧を取得するメソッド
+     * 学校コードから School を1件取得する
      */
-    public List<String> findClassesBySchool(String schoolCd) throws Exception {
-        List<String> classList = new ArrayList<>();
+    public School get(String cd) throws Exception {
+        School school = null;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        // DB接続
-        Connection con = getConnection();
+        try {
+            con = getConnection();
+            String sql = "SELECT * FROM school WHERE school_cd = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, cd);
+            rs = stmt.executeQuery();
 
-        // SQL
-        String sql = "SELECT CLASS_NUM FROM SCHOOL WHERE SCHOOL_CD = ?";
-        PreparedStatement stmt = con.prepareStatement(sql);
-        stmt.setString(1, schoolCd);
-
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            classList.add(rs.getString("CLASS_NUM"));
+            if (rs.next()) {
+                school = new School();
+                school.setCd(rs.getString("school_cd"));
+                school.setName(rs.getString("name"));
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (con != null) con.close();
         }
 
-        return classList;
-    }
-
-    /**
-     * SCHOOL テーブルに登録されているすべての学校コードを取得するメソッド
-     */
-    public List<String> findAllSchools() throws Exception {
-        List<String> schoolList = new ArrayList<>();
-
-        Connection con = getConnection();
-        String sql = "SELECT DISTINCT SCHOOL_CD FROM SCHOOL";
-        PreparedStatement stmt = con.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            schoolList.add(rs.getString("SCHOOL_CD"));
-        }
-
-        return schoolList;
+        return school;
     }
 }
