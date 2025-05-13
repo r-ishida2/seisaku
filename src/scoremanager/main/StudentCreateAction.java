@@ -11,6 +11,6 @@ public class StudentCreateAction extends Action {
         // 必要に応じて初期データの取得などを行う（今回は特にない前提）
 
         // JSPのパスを返すだけ
-        return "/view/student/create.jsp";
+        return "/main/student_create.jsp";
     }
 }
