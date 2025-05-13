@@ -32,6 +32,24 @@ public class StudentListAction extends Action {
         StudentDao dao = new StudentDao();
         List<Student> studentList = dao.filter(school, true);  // 出席している生徒一覧を取得
 
+        // ====== デバッグ出力（JSPに渡す前に中身を確認） ======
+        System.out.println("=== 生徒一覧の中身 ===");
+        if (studentList.isEmpty()) {
+            System.out.println("生徒データはありません。");
+        } else {
+            for (Student s : studentList) {
+                System.out.println(
+                    "学生番号: " + s.getNo() +
+                    ", 氏名: " + s.getName() +
+                    ", 入学年度: " + s.getEnt_Year() +
+                    ", クラス: " + s.getClass_Num() +
+                    ", 在学中: " + s.is_Attend() +
+                    ", 学校名: " + (s.getSchool() != null ? s.getSchool().getName() : "未設定")
+                );
+            }
+        }
+        // ============================================
+
         // リクエストにセット
         request.setAttribute("students", studentList);
 

@@ -5,7 +5,7 @@
         <%@ include file="../side.jsp" %>
     </div>
     <div class="content-container">
-    <form action="scoremanager.LoginExecute.action" method="post">
+    <form action="scoremanager.StudentCreateExecute.action" method="post">
 	    <h2>学生情報登録</h2>
 	    <label>入学年度</label>
 	    <select name="ent_year">
@@ -29,7 +29,7 @@
 		</select>
 		<input type="submit" value="登録して終了">
     </form>
-    <a href="<c:url value='/xxxx'/>">戻る</a>
+    <a href="<c:url value='scoremanager/main/StudentList.action'/>">戻る</a>
     </div>
 </div>
 <%@ include file="../footer.jsp" %>
