@@ -11,14 +11,14 @@ import bean.Student;
 
 public class StudentDao extends Dao {
 
-    private final String BASE_SQL = "SELECT * FROM STUDENT WHERE ";
+    private final String BASE_SQL = "SELECT * FROM STUDENT";
 
     // 学生1人取得
     public Student get(String no) {
         Student student = null;
 
         try (Connection con = getConnection()) {
-            String sql = "SELECT * FROM STUDENT WHERE no = ?";
+            String sql = BASE_SQL + " WHERE no = ?";
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, no);
 
@@ -27,24 +27,32 @@ public class StudentDao extends Dao {
                 student = postFilter(rs, null); // 学校情報はnullでも可
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Student get() error: " + e.getMessage());
         }
 
         return student;
     }
 
-    // 学生一覧取得（学校 + 年度 + クラス + 在籍）
+    // 学生一覧取得（学校 + 年度 + クラス + 在籍）※classNumが空でもOK
     public List<Student> filter(School school, int entYear, String classNum, boolean isAttend) {
         List<Student> list = new ArrayList<>();
-        String sql = BASE_SQL + "school_cd = ? AND ent_year = ? AND class_num = ? AND is_attend = ?";
+        StringBuilder sql = new StringBuilder(BASE_SQL + " WHERE school_cd = ? AND ent_year = ? AND is_attend = ?");
+        boolean hasClassNum = classNum != null && !classNum.trim().isEmpty();
+
+        if (hasClassNum) {
+            sql.append(" AND class_num = ?");
+        }
 
         try (Connection con = getConnection();
-             PreparedStatement st = con.prepareStatement(sql)) {
+             PreparedStatement st = con.prepareStatement(sql.toString())) {
 
-            st.setString(1, school.getCd());
-            st.setInt(2, entYear);
-            st.setString(3, classNum);
-            st.setBoolean(4, isAttend);
+            int index = 1;
+            st.setString(index++, school.getCd());
+            st.setInt(index++, entYear);
+            st.setBoolean(index++, isAttend);
+            if (hasClassNum) {
+                st.setString(index, classNum);
+            }
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -52,15 +60,16 @@ public class StudentDao extends Dao {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Student filter(school, year, class, attend) error: " + e.getMessage());
         }
+
         return list;
     }
 
     // 学生一覧取得（学校 + 年度 + 在籍）
     public List<Student> filter(School school, int entYear, boolean isAttend) {
         List<Student> list = new ArrayList<>();
-        String sql = BASE_SQL + "school_cd = ? AND ent_year = ? AND is_attend = ?";
+        String sql = BASE_SQL + " WHERE school_cd = ? AND ent_year = ? AND is_attend = ?";
 
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
@@ -75,7 +84,7 @@ public class StudentDao extends Dao {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Student filter(school, year, attend) error: " + e.getMessage());
         }
 
         return list;
@@ -84,7 +93,7 @@ public class StudentDao extends Dao {
     // 学生一覧取得（学校 + 在籍）
     public List<Student> filter(School school, boolean isAttend) {
         List<Student> list = new ArrayList<>();
-        String sql = BASE_SQL + "school_cd = ? AND is_attend = ?";
+        String sql = BASE_SQL + " WHERE school_cd = ? AND is_attend = ?";
 
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
@@ -98,33 +107,56 @@ public class StudentDao extends Dao {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Student filter(school, attend) error: " + e.getMessage());
         }
 
         return list;
     }
 
-    // 学生情報保存（REPLACE INTO = INSERT or UPDATE）
+    // 学生情報保存（INSERT or UPDATE）
     public boolean save(Student student) {
         boolean result = false;
 
         try (Connection con = getConnection()) {
-            String sql = "REPLACE INTO STUDENT(no, name, ent_year, class_num, is_attend, school_cd) "
-                       + "VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement st = con.prepareStatement(sql);
+            // まず存在確認
+            String checkSql = "SELECT COUNT(*) FROM STUDENT WHERE no = ?";
+            try (PreparedStatement checkSt = con.prepareStatement(checkSql)) {
+                checkSt.setString(1, student.getNo());
+                ResultSet rs = checkSt.executeQuery();
+                rs.next();
+                int count = rs.getInt(1);
 
-            st.setString(1, student.getNo());
-            st.setString(2, student.getName());
-            st.setInt(3, student.getEntYear());
-            st.setString(4, student.getClassNum());
-            st.setBoolean(5, student.isAttend());
-            st.setString(6, student.getSchool().getCd());
+                if (count > 0) {
+                    // UPDATE
+                    String updateSql = "UPDATE STUDENT SET name = ?, ent_year = ?, class_num = ?, is_attend = ?, school_cd = ? WHERE no = ?";
+                    try (PreparedStatement st = con.prepareStatement(updateSql)) {
+                        st.setString(1, student.getName());
+                        st.setInt(2, student.getEntYear());
+                        st.setString(3, student.getClassNum());
+                        st.setBoolean(4, student.isAttend());
+                        st.setString(5, student.getSchool().getCd());
+                        st.setString(6, student.getNo());
 
-            int count = st.executeUpdate();
-            result = (count == 1);
+                        result = (st.executeUpdate() == 1);
+                    }
+                } else {
+                    // INSERT
+                    String insertSql = "INSERT INTO STUDENT(no, name, ent_year, class_num, is_attend, school_cd) VALUES (?, ?, ?, ?, ?, ?)";
+                    try (PreparedStatement st = con.prepareStatement(insertSql)) {
+                        st.setString(1, student.getNo());
+                        st.setString(2, student.getName());
+                        st.setInt(3, student.getEntYear());
+                        st.setString(4, student.getClassNum());
+                        st.setBoolean(5, student.isAttend());
+                        st.setString(6, student.getSchool().getCd());
+
+                        result = (st.executeUpdate() == 1);
+                    }
+                }
+            }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Student save() error: " + e.getMessage());
         }
 
         return result;
@@ -149,7 +181,7 @@ public class StudentDao extends Dao {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Student postFilter() error: " + e.getMessage());
         }
 
         return s;
