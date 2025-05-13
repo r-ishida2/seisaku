@@ -34,10 +34,10 @@ public class StudentDao extends Dao {
     }
 
     // 学生一覧取得（学校 + 年度 + クラス + 在籍）※classNumが空でもOK
-    public List<Student> filter(School school, int entYear, String classNum, boolean isAttend) {
+    public List<Student> filter(School school, int ent_Year, String class_Num, boolean is_Attend) {
         List<Student> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(BASE_SQL + " WHERE school_cd = ? AND ent_year = ? AND is_attend = ?");
-        boolean hasClassNum = classNum != null && !classNum.trim().isEmpty();
+        boolean hasClassNum = class_Num != null && !class_Num.trim().isEmpty();
 
         if (hasClassNum) {
             sql.append(" AND class_num = ?");
@@ -48,10 +48,10 @@ public class StudentDao extends Dao {
 
             int index = 1;
             st.setString(index++, school.getCd());
-            st.setInt(index++, entYear);
-            st.setBoolean(index++, isAttend);
+            st.setInt(index++, ent_Year);
+            st.setBoolean(index++, is_Attend);
             if (hasClassNum) {
-                st.setString(index, classNum);
+                st.setString(index, class_Num);
             }
 
             ResultSet rs = st.executeQuery();
@@ -67,7 +67,7 @@ public class StudentDao extends Dao {
     }
 
     // 学生一覧取得（学校 + 年度 + 在籍）
-    public List<Student> filter(School school, int entYear, boolean isAttend) {
+    public List<Student> filter(School school, int ent_Year, boolean is_Attend) {
         List<Student> list = new ArrayList<>();
         String sql = BASE_SQL + " WHERE school_cd = ? AND ent_year = ? AND is_attend = ?";
 
@@ -75,8 +75,8 @@ public class StudentDao extends Dao {
              PreparedStatement st = con.prepareStatement(sql)) {
 
             st.setString(1, school.getCd());
-            st.setInt(2, entYear);
-            st.setBoolean(3, isAttend);
+            st.setInt(2, ent_Year);
+            st.setBoolean(3, is_Attend);
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -131,9 +131,9 @@ public class StudentDao extends Dao {
                     String updateSql = "UPDATE STUDENT SET name = ?, ent_year = ?, class_num = ?, is_attend = ?, school_cd = ? WHERE no = ?";
                     try (PreparedStatement st = con.prepareStatement(updateSql)) {
                         st.setString(1, student.getName());
-                        st.setInt(2, student.getEntYear());
-                        st.setString(3, student.getClassNum());
-                        st.setBoolean(4, student.isAttend());
+                        st.setInt(2, student.getEnt_Year());
+                        st.setString(3, student.getClass_Num());
+                        st.setBoolean(4, student.is_Attend());
                         st.setString(5, student.getSchool().getCd());
                         st.setString(6, student.getNo());
 
@@ -145,9 +145,9 @@ public class StudentDao extends Dao {
                     try (PreparedStatement st = con.prepareStatement(insertSql)) {
                         st.setString(1, student.getNo());
                         st.setString(2, student.getName());
-                        st.setInt(3, student.getEntYear());
-                        st.setString(4, student.getClassNum());
-                        st.setBoolean(5, student.isAttend());
+                        st.setInt(3, student.getEnt_Year());
+                        st.setString(4, student.getClass_Num());
+                        st.setBoolean(5, student.is_Attend());
                         st.setString(6, student.getSchool().getCd());
 
                         result = (st.executeUpdate() == 1);
@@ -168,8 +168,8 @@ public class StudentDao extends Dao {
         try {
             s.setNo(rs.getString("no"));
             s.setName(rs.getString("name"));
-            s.setEntYear(rs.getInt("ent_year"));
-            s.setClassNum(rs.getString("class_num"));
+            s.setEnt_Year(rs.getInt("ent_year"));
+            s.setClass_Num(rs.getString("class_num"));
             s.setAttend(rs.getBoolean("is_attend"));
 
             if (school != null) {
