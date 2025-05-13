@@ -56,14 +56,14 @@ public class TestDao extends Dao {
         return list;
     }
 
-    public List<Test> filter(int entYear, String classNum, Subject subject, int num, School school) throws Exception {
+    public List<Test> filter(int ent_Year, String class_Num, Subject subject, int num, School school) throws Exception {
         List<Test> list = new ArrayList<>();
 
         try (Connection connection = getConnection()) {
             String sql = baseSql + " AND ent_year=? AND class_num=? AND subject_cd=? AND point_no=? AND school_cd=?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setInt(1, entYear);
-                stmt.setString(2, classNum);
+                stmt.setInt(1, ent_Year);
+                stmt.setString(2, class_Num);
                 stmt.setString(3, subject.getCd());
                 stmt.setInt(4, num);
                 stmt.setString(5, school.getCd());
@@ -100,10 +100,10 @@ public class TestDao extends Dao {
             stmt.setString(3, test.getSchool().getCd());
             stmt.setInt(4, test.getNo());
             stmt.setInt(5, test.getPoint());
-            stmt.setString(6, test.getClassNum());
+            stmt.setString(6, test.getClass_Num());
 
             stmt.setInt(7, test.getPoint());
-            stmt.setString(8, test.getClassNum());
+            stmt.setString(8, test.getClass_Num());
 
             int result = stmt.executeUpdate();
             return result > 0;

@@ -14,18 +14,18 @@ public class StudentCreateExecuteAction extends Action {
         // フォームからのパラメータを取得
         String no = req.getParameter("no");
         String name = req.getParameter("name");
-        int ent_Year = Integer.parseInt(req.getParameter("ent_Year"));
-        String class_Num = req.getParameter("class_Num");
-        boolean is_Attend = Boolean.parseBoolean(req.getParameter("is_Attend"));
-        String schoolCd = req.getParameter("schoolCd");
+        int entYear = Integer.parseInt(req.getParameter("entYear"));
+        String classNum = req.getParameter("classNum");
+        boolean isAttend = Boolean.parseBoolean(req.getParameter("isAttend"));
+        String schoolCd = req.getParameter("Cd");
 
         // Studentインスタンスを生成して値をセット
         Student student = new Student();
         student.setNo(no);
         student.setName(name);
-        student.setEnt_Year(ent_Year);
-        student.setClass_Num(class_Num);
-        student.setAttend(is_Attend);
+        student.setEntYear(entYear);
+        student.setClassNum(classNum);
+        student.setAttend(isAttend);
 
         // Schoolを生成し、Studentに設定
         School school = new School();
