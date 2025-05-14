@@ -44,6 +44,6 @@ public class StudentCreateExecuteAction extends Action {
         }
 
         // 戻り値でJSPのパスを返す
-        return "/view/student/result.jsp";
+        return "/main/student_create_done.jsp";
     }
 }

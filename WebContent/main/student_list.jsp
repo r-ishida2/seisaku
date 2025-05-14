@@ -6,7 +6,7 @@
     </div>
     <div class="content-container">
 		<h2>学生一覧</h2>
-		<a href="<c:url value='/xxxx'/>">新規登録</a>
+		<a href="<c:url value='/scoremanager.main.StudentCreate.action'/>">新規登録</a>
 		<form action="scoremanager.StudentList.action" method="post">
 			<label>入学年度</label>
 			<select name="f1">
