@@ -5,10 +5,11 @@
         <%@ include file="../side.jsp" %>
     </div>
     <div class="content-container">
-    <form action="scoremanager.StudentCreateExecute.action" method="post">
+    <form action="scoremanager.main.StudentCreateExecute.action" method="post">
 	    <h2>学生情報登録</h2>
 	    <label>入学年度</label>
-	    <select name="ent_year">
+	    <select name="entYear">
+	    	<option value=null>-----</option>
 	    	<option value="2021">2021</option>
 			<option value="2022">2022</option>
 			<option value="2023">2023</option>
@@ -20,7 +21,7 @@
 	    <label>氏名</label>
 	    <input type="text" name="name">
 	    <label>クラス</label>
-	    <select name="class_num">
+	    <select name="classNum">
 			<option value="201">201</option>
 			<option value="202">202</option>
 			<option value="203">203</option>
