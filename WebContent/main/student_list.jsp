@@ -7,9 +7,10 @@
     <div class="content-container">
 		<h2>学生一覧</h2>
 		<a href="<c:url value='/scoremanager.main.StudentCreate.action'/>">新規登録</a>
-		<form action="scoremanager.StudentList.action" method="post">
+		<form action="StudentList.action" method="post">
 			<label>入学年度</label>
 			<select name="f1">
+				<option value=null>---------</option>
 				<option value="2021">2021</option>
 				<option value="2022">2022</option>
 				<option value="2023">2023</option>
@@ -18,13 +19,16 @@
 			</select>
 			<label>クラス</label>
 			<select name="f2">
+				<option value=null>--------</option>
 				<option value="201">201</option>
 				<option value="202">202</option>
 				<option value="203">203</option>
 				<option value="204">204</option>
 				<option value="205">205</option>
 			</select>
-			<input type="checkbox" onclick="togglePasswordVisibility()" name="f3">
+			<label>在籍中</label>
+			<input type="hidden" name="f3" value="false">
+			<input type="checkbox" name="f3" value="true">
 			<input type="submit" value="絞り込み">
 		</form>
 
