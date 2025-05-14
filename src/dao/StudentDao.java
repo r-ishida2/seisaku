@@ -34,7 +34,7 @@ public class StudentDao extends Dao {
     }
 
     // 学生一覧取得（学校 + 年度 + クラス + 在籍）
-    public List<Student> filter(School school, int entYear, String classNum, boolean isAttend) {
+    public List<Student> filter(School school, int ent_Year, String classNum, boolean isAttend) {
         List<Student> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(BASE_SQL + " WHERE school_cd = ? AND ent_year = ? AND is_attend = ?");
         boolean hasClassNum = classNum != null && !classNum.trim().isEmpty();
@@ -48,7 +48,7 @@ public class StudentDao extends Dao {
 
             int index = 1;
             st.setString(index++, school.getCd());
-            st.setInt(index++, entYear);
+            st.setInt(index++, ent_Year);
             st.setBoolean(index++, isAttend);
             if (hasClassNum) {
                 st.setString(index, classNum);
@@ -58,11 +58,7 @@ public class StudentDao extends Dao {
             while (rs.next()) {
                 Student student = postFilter(rs, school);
                 list.add(student);
-                System.out.println("デバッグ - 学生番号: " + student.getNo() +
-                                   ", 氏名: " + student.getName() +
-                                   ", 入学年度: " + student.getEntYear() +
-                                   ", クラス: " + student.getClassNum() +
-                                   ", 在学中: " + student.is_Attend());
+
             }
 
         } catch (Exception e) {
@@ -88,11 +84,7 @@ public class StudentDao extends Dao {
             while (rs.next()) {
                 Student student = postFilter(rs, school);
                 list.add(student);
-                System.out.println("デバッグ - 学生番号: " + student.getNo() +
-                                   ", 氏名: " + student.getName() +
-                                   ", 入学年度: " + student.getEntYear() +
-                                   ", クラス: " + student.getClassNum() +
-                                   ", 在学中: " + student.is_Attend());
+
             }
 
         } catch (Exception e) {
@@ -117,11 +109,7 @@ public class StudentDao extends Dao {
             while (rs.next()) {
                 Student student = postFilter(rs, school);
                 list.add(student);
-                System.out.println("デバッグ - 学生番号: " + student.getNo() +
-                                   ", 氏名: " + student.getName() +
-                                   ", 入学年度: " + student.getEntYear() +
-                                   ", クラス: " + student.getClassNum() +
-                                   ", 在学中: " + student.is_Attend());
+
             }
 
         } catch (Exception e) {
@@ -143,11 +131,7 @@ public class StudentDao extends Dao {
             while (rs.next()) {
                 Student student = postFilter(rs, null);
                 list.add(student);
-                System.out.println("デバッグ - 学生番号: " + student.getNo() +
-                                   ", 氏名: " + student.getName() +
-                                   ", 入学年度: " + student.getEntYear() +
-                                   ", クラス: " + student.getClassNum() +
-                                   ", 在学中: " + student.is_Attend());
+
             }
 
         } catch (Exception e) {
@@ -175,7 +159,7 @@ public class StudentDao extends Dao {
                         st.setString(1, student.getName());
                         st.setInt(2, student.getEntYear());
                         st.setString(3, student.getClassNum());
-                        st.setBoolean(4, student.is_Attend());
+                        st.setBoolean(4, student.isAttend());
                         st.setString(5, student.getSchool().getCd());
                         st.setString(6, student.getNo());
 
@@ -188,7 +172,7 @@ public class StudentDao extends Dao {
                         st.setString(2, student.getName());
                         st.setInt(3, student.getEntYear());
                         st.setString(4, student.getClassNum());
-                        st.setBoolean(5, student.is_Attend());
+                        st.setBoolean(5, student.isAttend());
                         st.setString(6, student.getSchool().getCd());
 
                         result = (st.executeUpdate() == 1);
@@ -209,9 +193,9 @@ public class StudentDao extends Dao {
         try {
             s.setNo(rs.getString("no"));
             s.setName(rs.getString("name"));
-            s.setEntYear(rs.getInt("entyear"));
-            s.setClassNum(rs.getString("classnum"));
-            s.setAttend(rs.getBoolean("isattend"));
+            s.setEntYear(rs.getInt("ent_year"));
+            s.setClassNum(rs.getString("class_num"));
+            s.setAttend(rs.getBoolean("is_attend"));
 
             if (school != null) {
                 s.setSchool(school);
@@ -221,11 +205,7 @@ public class StudentDao extends Dao {
                 s.setSchool(sch);
             }
 
-            System.out.println("デバッグ - 学生番号: " + s.getNo() +
-                               ", 氏名: " + s.getName() +
-                               ", 入学年度: " + s.getEntYear() +
-                               ", クラス: " + s.getClassNum() +
-                               ", 在学中: " + s.is_Attend());
+;
 
         } catch (Exception e) {
             System.err.println("Student postFilter() error: " + e.getMessage());

@@ -34,12 +34,12 @@
 				<table style="border-collapse:separate;border-spacing:10px;">
 				<c:forEach var="item" items="${students}">
 					<tr>
-					<td>${item.id}</td>
-					<td>${item.num}</td>
+					<td>${item.no}</td>
 					<td>${item.name}</td>
-					<td>${item.class}</td>
-					<td>${item.now}</td>
-					<td><a href="StudentChange.action?id=${item.id}">変更</a></td>
+					<td>${item.entYear}</td>      <%-- 修正済 --%>
+					<td>${item.classNum}</td>     <%-- 修正済 --%>
+					<td>${item.attend}</td>       <%-- 修正済 --%>
+					<td><a href="StudentChange.action?no=${item.no}">変更</a></td>
 					</tr>
 				</c:forEach>
 				</table>
