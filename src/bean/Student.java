@@ -37,7 +37,7 @@ public class Student {
         this.classNum = class_Num;
     }
 
-    public boolean is_Attend() {
+    public boolean isAttend() {
         return isAttend;
     }
     public void setAttend(boolean is_Attend) {
