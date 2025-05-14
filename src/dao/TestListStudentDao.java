@@ -47,7 +47,7 @@ public class TestListStudentDao {
             PreparedStatement st = con.prepareStatement(sql)
         ) {
             st.setString(1, student.getSchool().getCd());
-            st.setString(2, student.getClass_Num());
+            st.setString(2, student.getClassNum());
             st.setString(3, student.getNo());
 
             ResultSet rs = st.executeQuery();

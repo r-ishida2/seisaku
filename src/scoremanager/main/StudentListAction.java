@@ -41,8 +41,8 @@ public class StudentListAction extends Action {
                 System.out.println(
                     "学生番号: " + s.getNo() +
                     ", 氏名: " + s.getName() +
-                    ", 入学年度: " + s.getEnt_Year() +
-                    ", クラス: " + s.getClass_Num() +
+                    ", 入学年度: " + s.getEntYear() +
+                    ", クラス: " + s.getClassNum() +
                     ", 在学中: " + s.is_Attend() +
                     ", 学校名: " + (s.getSchool() != null ? s.getSchool().getName() : "未設定")
                 );

@@ -44,7 +44,7 @@ public class TestListSubjectDao extends Dao {
                 bean.setEntYear(rSet.getInt("ENT_YEAR"));
                 bean.setStudentNo(studentNo);
                 bean.setStudentName(stu.getName());
-                bean.setClassNum(stu.getClass_Num());
+                bean.setClassNum(stu.getClassNum());
                 bean.setPoints(new HashMap<>());
                 resultMap.put(studentNo, bean);
                 list.add(bean);
