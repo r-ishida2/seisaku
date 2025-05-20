@@ -205,7 +205,7 @@ public class StudentDao extends Dao {
                 s.setSchool(sch);
             }
 
-;
+            return s;
 
         } catch (Exception e) {
             System.err.println("Student postFilter() error: " + e.getMessage());
