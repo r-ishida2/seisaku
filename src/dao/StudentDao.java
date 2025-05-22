@@ -13,7 +13,6 @@ public class StudentDao extends Dao {
 
     private final String BASE_SQL = "SELECT * FROM STUDENT";
 
-    // 学生1人取得
     public Student get(String no) {
         Student student = null;
 
@@ -33,8 +32,7 @@ public class StudentDao extends Dao {
         return student;
     }
 
-    // 学生一覧取得（学校 + 年度 + クラス + 在籍）
-    public List<Student> filter(School school, int ent_Year, String classNum, boolean isAttend) {
+    public List<Student> filter(School school, int entYear, String classNum, boolean isAttend) {
         List<Student> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(BASE_SQL + " WHERE school_cd = ? AND ent_year = ? AND is_attend = ?");
         boolean hasClassNum = classNum != null && !classNum.trim().isEmpty();
@@ -43,33 +41,45 @@ public class StudentDao extends Dao {
             sql.append(" AND class_num = ?");
         }
 
+        // --- デバッグ出力 ---
+        System.out.println("[DEBUG] SQL: " + sql);
+        System.out.println("[DEBUG] school_cd: " + school.getCd());
+        System.out.println("[DEBUG] ent_year: " + entYear);
+        System.out.println("[DEBUG] is_attend: " + isAttend);
+        System.out.println("[DEBUG] class_num: " + (hasClassNum ? classNum : "(なし)"));
+
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql.toString())) {
 
             int index = 1;
             st.setString(index++, school.getCd());
-            st.setInt(index++, ent_Year);
+            st.setInt(index++, entYear);
             st.setBoolean(index++, isAttend);
+
             if (hasClassNum) {
                 st.setString(index, classNum);
             }
 
             ResultSet rs = st.executeQuery();
+            int count = 0;
+
             while (rs.next()) {
                 Student student = postFilter(rs, school);
                 list.add(student);
-
+                count++;
             }
 
+            System.out.println("[DEBUG] 結果件数: " + count);
+
         } catch (Exception e) {
-            System.err.println("Student filter(school, year, class, attend) error: " + e.getMessage());
+            System.err.println("Student filter(school, year, class, attend) error: " + e.getClass().getSimpleName() + " - " + e.getMessage());
         }
 
         return list;
     }
 
-    // 学生一覧取得（学校 + 年度 + 在籍）
-    public List<Student> filter(School school, int ent_Year, boolean is_Attend) {
+
+    public List<Student> filter(School school, int entYear, boolean isAttend) {
         List<Student> list = new ArrayList<>();
         String sql = BASE_SQL + " WHERE school_cd = ? AND ent_year = ? AND is_attend = ?";
 
@@ -77,14 +87,13 @@ public class StudentDao extends Dao {
              PreparedStatement st = con.prepareStatement(sql)) {
 
             st.setString(1, school.getCd());
-            st.setInt(2, ent_Year);
-            st.setBoolean(3, is_Attend);
+            st.setInt(2, entYear);
+            st.setBoolean(3, isAttend);
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Student student = postFilter(rs, school);
                 list.add(student);
-
             }
 
         } catch (Exception e) {
@@ -94,22 +103,29 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    // 学生一覧取得（学校 + 在籍）
     public List<Student> filter(School school, boolean isAttend) {
+        System.out.println("[DEBUG] filter(School, boolean) 呼び出し: school = " + (school == null ? "null" : school.getCd()) + ", isAttend = " + isAttend);
         List<Student> list = new ArrayList<>();
-        String sql = BASE_SQL + " WHERE school_cd = ? AND is_attend = ?";
+        StringBuilder sql = new StringBuilder(BASE_SQL + " WHERE is_attend = ?");
+        boolean hasSchool = (school != null);
+
+        if (hasSchool) {
+            sql.append(" AND school_cd = ?");
+        }
 
         try (Connection con = getConnection();
-             PreparedStatement st = con.prepareStatement(sql)) {
+             PreparedStatement st = con.prepareStatement(sql.toString())) {
 
-            st.setString(1, school.getCd());
-            st.setBoolean(2, isAttend);
+            int index = 1;
+            st.setBoolean(index++, isAttend);
+            if (hasSchool) {
+                st.setString(index++, school.getCd());
+            }
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                Student student = postFilter(rs, school);
+                Student student = postFilter(rs, school); // school=nullでもpostFilterが動く前提
                 list.add(student);
-
             }
 
         } catch (Exception e) {
@@ -119,29 +135,9 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    // 🔍 全学生一覧取得（制限なし・デバッグ用）
-    public List<Student> filterAll() {
-        List<Student> list = new ArrayList<>();
-        String sql = BASE_SQL;
 
-        try (Connection con = getConnection();
-             PreparedStatement st = con.prepareStatement(sql)) {
 
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Student student = postFilter(rs, null);
-                list.add(student);
 
-            }
-
-        } catch (Exception e) {
-            System.err.println("Student filterAll() error: " + e.getMessage());
-        }
-
-        return list;
-    }
-
-    // 学生情報保存（INSERT or UPDATE）
     public boolean save(Student student) {
         boolean result = false;
 
@@ -187,7 +183,6 @@ public class StudentDao extends Dao {
         return result;
     }
 
-    // ResultSet → Student オブジェクト変換処理
     private Student postFilter(ResultSet rs, School school) {
         Student s = new Student();
         try {
@@ -205,13 +200,11 @@ public class StudentDao extends Dao {
                 s.setSchool(sch);
             }
 
-
-            return s;
-
         } catch (Exception e) {
             System.err.println("Student postFilter() error: " + e.getMessage());
         }
 
         return s;
     }
+
 }

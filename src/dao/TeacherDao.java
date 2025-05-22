@@ -19,10 +19,11 @@ public class TeacherDao extends Dao {
      */
     public Teacher login(String id, String password) throws Exception {
         // SQL：IDとパスワードで教員を検索
+        String sql = "SELECT * FROM TEACHER WHERE ID = ? AND PASSWORD = ?";
 
         try (
             Connection con = getConnection();
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM TEACHER WHERE ID = ? AND PASSWORD = ?");
+            PreparedStatement stmt = con.prepareStatement(sql);
         ) {
             // プレースホルダーに値をセット
             stmt.setString(1, id);
@@ -31,18 +32,20 @@ public class TeacherDao extends Dao {
             // 実行して結果取得
             ResultSet rs = stmt.executeQuery();
 
-            // 一致する教員がいればTeacherオブジェクトにして返す
             if (rs.next()) {
                 Teacher teacher = new Teacher();
                 teacher.setId(rs.getString("ID"));
                 teacher.setName(rs.getString("NAME"));
+
+                // SCHOOL_CD を取得して School オブジェクトに設定
                 School school = new School();
+                school.setCd(rs.getString("SCHOOL_CD"));
                 teacher.setSchool(school);
-                // 他にも必要ならセット
+
                 return teacher;
             }
 
-            // 一致しなければnullを返す
+            // 一致しなければ null を返す
             return null;
         }
     }
