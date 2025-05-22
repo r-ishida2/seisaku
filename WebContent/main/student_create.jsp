@@ -19,14 +19,15 @@
 	    <label>学生番号</label>
 	    <input type="text" name="no">
 	    <label>氏名</label>
-	    <input type="text" name="name">
+	    <input type="text" name="name" required>
 	    <label>クラス</label>
-	    <select name="classNum">
-			<option value="201">201</option>
-			<option value="202">202</option>
-			<option value="203">203</option>
-			<option value="204">204</option>
-			<option value="205">205</option>
+	    <select name="classNum" required>
+		  <option value="">----</option>
+		  <option value="201">201</option>
+		  <option value="202">202</option>
+		  <option value="203">203</option>
+		  <option value="204">204</option>
+		  <option value="205">205</option>
 		</select>
 		<input type="submit" value="登録して終了">
     </form>

@@ -21,14 +21,14 @@ public class StudentUpdateAction extends Action {
         // 生徒が見つからない場合はエラーページへ（または一覧に戻す）
         if (student == null) {
             request.setAttribute("message", "指定された生徒は見つかりませんでした。");
-            return "student_list.jsp";
+            return "/main/student_list.jsp";
         }
 
         // 生徒情報をリクエストにセット
         request.setAttribute("student", student);
 
         // 更新フォームへ遷移
-        return "student_update.jsp";
+        return "/main/student_update.jsp";
     }
 }
 

@@ -41,12 +41,12 @@ public class StudentUpdateExecuteAction extends Action {
         if (success) {
             // 成功 → 一覧ページにリダイレクト or メッセージ表示
             request.setAttribute("message", "生徒情報を更新しました。");
-            return "student_list.jsp";
+            return "/main/student_update_done.jsp";
         } else {
             // 失敗 → メッセージ付きでフォームに戻る
             request.setAttribute("message", "生徒情報の更新に失敗しました。");
             request.setAttribute("student", student);
-            return "student_update.jsp";
+            return "/main/student_update.jsp";
         }
     }
 }
