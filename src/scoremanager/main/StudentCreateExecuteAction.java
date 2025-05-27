@@ -1,25 +1,52 @@
 package scoremanager.main;
 
+import java.time.LocalDate;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.School;
 import bean.Student;
+import bean.Teacher;
 import dao.StudentDao;
 import tool.Action;
 
 public class StudentCreateExecuteAction extends Action {
-    @Override
+	@Override
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        // フォームからのパラメータを取得
+
+        // フォームからのパラメータ取得
         String no = req.getParameter("no");
         String name = req.getParameter("name");
         int entYear = Integer.parseInt(req.getParameter("entYear"));
         String classNum = req.getParameter("classNum");
-        boolean isAttend = Boolean.parseBoolean(req.getParameter("isAttend"));
-        String schoolCd = req.getParameter("Cd");
 
-        // Studentインスタンスを生成して値をセット
+        // セッションからログイン中の教員を取得
+        HttpSession session = req.getSession();
+        Teacher teacher = (Teacher) session.getAttribute("NAME");  // または "TEACHER"
+        if (teacher == null || teacher.getSchool() == null) {
+            req.setAttribute("message", "ログイン情報が確認できません。");
+            return "/login.jsp";
+        }
+
+        // 学校コードと在籍状態を設定
+        String schoolCd = teacher.getSchool().getCd();
+        boolean isAttend = (entYear <= LocalDate.now().getYear()); // 現在の年以下なら在籍中とする
+
+        // DAOで重複チェック
+        StudentDao dao = new StudentDao();
+        if (dao.get(no) != null) {
+            // 学生番号が重複 → 登録せずにフォームに戻す
+            req.setAttribute("message", "学生番号がすでに存在しています。別の番号を入力してください。");
+            req.setAttribute("no", no);
+            req.setAttribute("name", name);
+            req.setAttribute("entYear", entYear);
+            req.setAttribute("classNum", classNum);
+            return "/main/student_create.jsp";  // 元のフォームへ戻す
+        }
+
+        // Studentインスタンス生成して値を設定
         Student student = new Student();
         student.setNo(no);
         student.setName(name);
@@ -27,23 +54,19 @@ public class StudentCreateExecuteAction extends Action {
         student.setClassNum(classNum);
         student.setAttend(isAttend);
 
-        // Schoolを生成し、Studentに設定
         School school = new School();
         school.setCd(schoolCd);
         student.setSchool(school);
 
-        // DAOで保存処理を実行
-        StudentDao dao = new StudentDao();
+        // 保存処理
         boolean result = dao.save(student);
 
-        // 結果をリクエストにセット
         if (result) {
             req.setAttribute("message", "生徒情報の登録に成功しました。");
         } else {
             req.setAttribute("message", "生徒情報の登録に失敗しました。");
         }
 
-        // 戻り値でJSPのパスを返す
         return "/main/student_create_done.jsp";
     }
 }
