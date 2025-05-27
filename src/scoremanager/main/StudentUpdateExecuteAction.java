@@ -18,7 +18,18 @@ public class StudentUpdateExecuteAction extends Action {
         String name = request.getParameter("name");
         int entYear = Integer.parseInt(request.getParameter("entYear"));
         String classNum = request.getParameter("classNum");
-        boolean isAttend = request.getParameter("isAttend") != null;
+
+        // hiddenとcheckbox両方あるので、"true" を含んでいれば在籍とみなす
+        String[] isAttendParams = request.getParameterValues("isAttend");
+        boolean isAttend = false;
+        if (isAttendParams != null) {
+            for (String val : isAttendParams) {
+                if ("true".equals(val)) {
+                    isAttend = true;
+                    break;
+                }
+            }
+        }
 
         // セッションから所属学校を取得（ログインユーザーの学校）
         HttpSession session = request.getSession();
