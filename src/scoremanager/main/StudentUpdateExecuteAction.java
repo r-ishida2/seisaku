@@ -22,7 +22,7 @@ public class StudentUpdateExecuteAction extends Action {
 
         // セッションから所属学校を取得（ログインユーザーの学校）
         HttpSession session = request.getSession();
-        bean.Teacher teacher = (bean.Teacher) session.getAttribute("user");
+        bean.Teacher teacher = (bean.Teacher) session.getAttribute("NAME");
         School school = teacher.getSchool();
 
         // Studentオブジェクト作成

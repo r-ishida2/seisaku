@@ -14,8 +14,10 @@
     <form action="StudentUpdateExecute.action" method="post">
     	<label>入学年度</label>
 		<a>${student.entYear}</a>
+		<input type="hidden" name="entYear" value="${student.entYear}">
 		<label>学生番号</label>
 		<a>${student.no}</a>
+		<input type="hidden" name="no" value="${student.no}">
 		<label>氏名</label>
 		<input type="text" name="name" value="${student.name}" required>
 		<label>クラス</label>
