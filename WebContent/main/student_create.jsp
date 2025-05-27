@@ -8,7 +8,7 @@
     <form action="scoremanager.main.StudentCreateExecute.action" method="post">
 	    <h2>学生情報登録</h2>
 	    <label>入学年度</label>
-	    <select name="entYear" required>
+	    <select name="entYear" >
 	    	<option value="">-----</option>
 	    	<option value="2021" <c:if test="${entYear == '2021'}">selected</c:if>>2021</option>
 			<option value="2022" <c:if test="${entYear == '2022'}">selected</c:if>>2022</option>
