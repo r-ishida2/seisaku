@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	<p>学生登録完了</p>
 </body>
 </html>

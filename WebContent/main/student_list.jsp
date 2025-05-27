@@ -46,16 +46,23 @@
 			<c:when test="${students.size() > 0}">
 				<div>検索結果: ${students.size()} 件</div>
 				<table style="border-collapse: separate; border-spacing: 10px;">
-					<c:forEach var="item" items="${students}">
-						<tr>
-							<td>${item.no}</td>
-							<td>${item.name}</td>
-							<td>${item.entYear}</td>
-							<td>${item.classNum}</td>
-							<td>${item.attend}</td>
-							<td><a href="StudentChange.action?no=${item.no}">変更</a></td>
-						</tr>
-					</c:forEach>
+				<tr>
+					<th>学生番号</th>
+					<th>氏名</th>
+					<th>入学年度</th>
+					<th>クラス番号</th>
+					<th>在籍中</th>
+				</tr>
+				<c:forEach var="item" items="${students}">
+				<tr>
+					<td>${item.no}</td>
+					<td>${item.name}</td>
+					<td>${item.entYear}</td>
+					<td>${item.classNum}</td>
+					<td>${item.attend}</td>
+					<td><a href="StudentUpdate.action?no=${item.no}">変更</a></td>
+				</tr>
+				</c:forEach>
 				</table>
 			</c:when>
 			<c:otherwise>
