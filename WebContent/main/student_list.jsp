@@ -34,12 +34,13 @@
 					<c:if test="${class_num == '204'}">selected</c:if>>204</option>
 				<option value="205"
 					<c:if test="${class_num == '205'}">selected</c:if>>205</option>
-			</select> <label>在籍中</label>
-<input type="checkbox" name="is_attend" value="true" <c:if test="${is_attend == 'true'}">checked</c:if>>
-			 <input
-				type="submit" value="絞り込み">
+			</select> <label>在籍中</label> <input type="checkbox" name="is_attend"
+				value="true" <c:if test="${is_attend == 'true'}">checked</c:if>>
+			<input type="submit" value="絞り込み">
 		</form>
-
+		<c:if test="${not empty error}">
+			<p style="color: red; font-weight: bold;">${error}</p>
+		</c:if>
 		<c:choose>
 			<c:when test="${students.size() > 0}">
 				<div>検索結果: ${students.size()} 件</div>

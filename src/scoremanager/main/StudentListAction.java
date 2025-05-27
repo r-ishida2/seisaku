@@ -42,6 +42,27 @@ public class StudentListAction extends Action {
         List<Student> students;
         StudentDao dao = new StudentDao();
 
+        if ((entYearStr == null || entYearStr.trim().isEmpty()) &&
+        	    classNum != null && !classNum.trim().isEmpty()) {
+
+        	    // 全件取得（在籍・退学）
+        	    students = new ArrayList<>();
+        	    students.addAll(dao.filter(school, true));
+        	    students.addAll(dao.filter(school, false));
+
+        	    // エラーメッセージを設定
+        	    request.setAttribute("error", "クラスを指定する場合は入学年度も指定してください");
+
+        	    // 入力値を保持
+        	    request.setAttribute("ent_year", "");
+        	    request.setAttribute("class_num", classNum.trim());
+        	    request.setAttribute("is_attend", isAttendStr != null ? isAttendStr : "");
+
+        	    // 一覧画面に戻る
+        	    request.setAttribute("students", students);
+        	    return "/main/student_list.jsp";
+        	}
+
         // 入力値の存在・妥当性チェック
         boolean hasEntYear = entYearStr != null && !entYearStr.trim().isEmpty();
         boolean hasIsAttend = isAttendStr != null && !isAttendStr.trim().isEmpty();
