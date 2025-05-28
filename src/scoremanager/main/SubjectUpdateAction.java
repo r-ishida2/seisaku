@@ -20,7 +20,7 @@ public class SubjectUpdateAction extends Action {
 
         // セッションからログイン中の教員を取得
         HttpSession session = request.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         // 教員が所属する学校を取得
         School school = teacher.getSchool();
@@ -40,6 +40,8 @@ public class SubjectUpdateAction extends Action {
             subject = new Subject();
             subject.setSchool(school);
         }
+        System.out.println(subject.getCd());
+        System.out.println(subject.getName());
         // JSPに渡す
         request.setAttribute("subject", subject);
 
