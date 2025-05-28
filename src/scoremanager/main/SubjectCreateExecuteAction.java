@@ -3,6 +3,7 @@ package scoremanager.main;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.School;
 import bean.Subject;
 import bean.Teacher;
 import dao.SubjectDao;
@@ -23,24 +24,41 @@ public class SubjectCreateExecuteAction extends Action {
             return "login.jsp"; // ログインしていない場合はログイン画面へ
         }
 
+        // 科目コードが3桁かチェック
+        if (cd == null || cd.length() != 3) {
+            request.setAttribute("message", "科目コードは3文字で入力してください。");
+            request.setAttribute("cd", cd);
+            request.setAttribute("name", name);
+            return "/main/subject_create.jsp";
+        }
+
+        School school = teacher.getSchool();
+        SubjectDao dao = new SubjectDao();
+
+        // 重複チェック
+        Subject existing = dao.get(cd, school);
+        if (existing != null) {
+            request.setAttribute("message", "科目コードが重複しています。");
+            request.setAttribute("cd", cd);
+            request.setAttribute("name", name);
+            return "/main/subject_create.jsp";
+        }
+
         // Subjectのインスタンスを生成・セット
         Subject subject = new Subject();
         subject.setCd(cd);
         subject.setName(name);
-        subject.setSchool(teacher.getSchool());
+        subject.setSchool(school);
 
         // 保存処理
-        boolean result = new SubjectDao().save(subject);
+        boolean result = dao.save(subject);
 
-        // リクエスト属性に結果を格納
         if (result) {
             request.setAttribute("message", "科目情報の登録に成功しました。");
         } else {
             request.setAttribute("message", "科目情報の登録に失敗しました。");
         }
 
-        // 完了画面または一覧画面に遷移（必要に応じて変更）
         return "/main/subject_create_done.jsp";
     }
 }
-
