@@ -21,7 +21,7 @@ public class SubjectListAction extends Action {
 
         // セッションからログイン中の教員を取得
         HttpSession session = request.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         // 教員が所属する学校を取得
         School school = teacher.getSchool();
@@ -34,6 +34,6 @@ public class SubjectListAction extends Action {
         request.setAttribute("subjects", list);
 
         // 教科一覧表示用のJSPへ
-        return "subject_list.jsp";
+        return "/main/subject_list.jsp";
     }
 }
