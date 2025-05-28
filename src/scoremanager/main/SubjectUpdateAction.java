@@ -44,7 +44,7 @@ public class SubjectUpdateAction extends Action {
         // JSPに渡す
         request.setAttribute("subject", subject);
 
-        return "subject_update.jsp";
+        return "/main/subject_update.jsp";
     }
 }
 
