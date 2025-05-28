@@ -12,10 +12,10 @@
     <!-- 右コンテンツエリア -->
     <div class="content-container">
     <form action="SubjectUpdateExecute.action" method="post">
-    	<label>入学年度</label>
+    	<label>科目コード</label>
 		<a>${subject.cd}</a>
 		<input type="hidden" name="cd" value="${subject.cd}">
-		<label>氏名</label>
+		<label>科目名</label>
 		<input type="text" name="name" value="${subject.name}" required>
 
 		<input type="submit" value="変更">
