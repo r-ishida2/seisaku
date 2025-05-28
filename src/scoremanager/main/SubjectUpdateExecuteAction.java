@@ -20,7 +20,7 @@ public class SubjectUpdateExecuteAction extends Action {
 
         // ログイン中の教員情報から学校情報を取得
         HttpSession session = request.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
         School school = teacher.getSchool();
 
         // フォームからパラメータを取得
