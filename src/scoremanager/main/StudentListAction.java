@@ -1,6 +1,7 @@
 package scoremanager.main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +18,11 @@ public class StudentListAction extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // セッションからログイン中の教員情報を取得
         HttpSession session = request.getSession();
         Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         if (teacher == null) {
-            return "/login.jsp";  // 未ログイン
+            return "/login.jsp";
         }
 
         School school = teacher.getSchool();
@@ -57,14 +57,14 @@ public class StudentListAction extends Action {
         boolean hasEntYear = entYearStr != null && !entYearStr.trim().isEmpty();
         boolean hasIsAttend = isAttendStr != null && !isAttendStr.trim().isEmpty();
 
-        // クラスだけ指定 → エラー + 全件
         if (!hasEntYear && classNum != null && !classNum.trim().isEmpty()) {
             students = new ArrayList<>();
             students.addAll(dao.filter(school, true));
             students.addAll(dao.filter(school, false));
 
-            request.setAttribute("error", "クラスを指定する場合は入学年度も指定してください");
+            students.sort(Comparator.comparing(Student::getNo)); // ← ソート追加
 
+            request.setAttribute("error", "クラスを指定する場合は入学年度も指定してください");
             request.setAttribute("ent_year", "");
             request.setAttribute("class_num", classNum.trim());
             request.setAttribute("is_attend", isAttendStr);
@@ -72,11 +72,12 @@ public class StudentListAction extends Action {
             return "/main/student_list.jsp";
         }
 
-        // is_attend=false かつ 他すべて空 → 全件表示
         if (!hasEntYear && !hasClassNum(classNum) && Boolean.FALSE.equals(isAttend)) {
             students = new ArrayList<>();
             students.addAll(dao.filter(school, true));
             students.addAll(dao.filter(school, false));
+
+            students.sort(Comparator.comparing(Student::getNo)); // ← ソート追加
 
             request.setAttribute("ent_year", "");
             request.setAttribute("class_num", "");
@@ -118,7 +119,6 @@ public class StudentListAction extends Action {
             request.setAttribute("is_attend", isAttendStr);
 
         } else {
-            // 完全に空の初期表示
             System.out.println("DEBUG: 初期表示 → 全件取得");
             students = new ArrayList<>();
             students.addAll(dao.filter(school, true));
@@ -128,6 +128,9 @@ public class StudentListAction extends Action {
             request.setAttribute("class_num", hasClassNum(classNum) ? classNum.trim() : "");
             request.setAttribute("is_attend", isAttendStr);
         }
+
+        // ★ 全体の最後でソート（どの分岐でもここを通る）
+        students.sort(Comparator.comparing(Student::getNo));
 
         request.setAttribute("students", students);
         return "/main/student_list.jsp";

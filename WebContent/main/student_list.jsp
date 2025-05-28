@@ -59,7 +59,7 @@
 					<td>${item.name}</td>
 					<td>${item.entYear}</td>
 					<td>${item.classNum}</td>
-					<td>${item.attend}</td>
+					<td><c:choose><c:when test="${item.attend}">〇</c:when><c:otherwise>×</c:otherwise></c:choose></td>
 					<td><a href="StudentUpdate.action?no=${item.no}">変更</a></td>
 				</tr>
 				</c:forEach>
