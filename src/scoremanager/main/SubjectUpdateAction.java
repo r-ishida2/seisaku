@@ -40,7 +40,6 @@ public class SubjectUpdateAction extends Action {
             subject = new Subject();
             subject.setSchool(school);
         }
-
         // JSPに渡す
         request.setAttribute("subject", subject);
 
