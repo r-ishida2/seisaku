@@ -36,7 +36,7 @@
 		    <p style="color:red;">${message}</p>
 		</c:if>
     </form>
-    <a href="<c:url value='scoremanager/main/StudentList.action'/>">戻る</a>
+    <a href="<c:url value='/scoremanager/main/StudentList.action'/>">戻る</a>
     </div>
 </div>
 <%@ include file="../footer.jsp" %>

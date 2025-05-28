@@ -7,7 +7,7 @@
     <div class="content-container">
     <h2>科目情報登録</h2>
     <label>${message}</label>
-    <a href="<c:url value='scoremanager/main/SubjectList.action'/>">科目一覧</a>
+    <a href="<c:url value='/scoremanager/main/SubjectList.action'/>">科目一覧</a>
     </div>
 </div>
 <%@ include file="../footer.jsp" %>

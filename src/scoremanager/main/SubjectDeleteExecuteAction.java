@@ -26,6 +26,6 @@ public class SubjectDeleteExecuteAction extends Action {
         SubjectDao dao = new SubjectDao();
         dao.delete(subject);
 
-        return "subject_delete_done.jsp";
+        return "/main/subject_delete_done.jsp";
     }
 }

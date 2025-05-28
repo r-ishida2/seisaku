@@ -6,7 +6,7 @@
 		<%@ include file="../side.jsp"%>
 	</div>
 	<div class="content-container">
-		<h2>学生一覧</h2>
+		<h2>学生管理</h2>
 		<a href="<c:url value='/scoremanager.main.StudentCreate.action'/>">新規登録</a>
 
 		<form action="StudentList.action" method="post">

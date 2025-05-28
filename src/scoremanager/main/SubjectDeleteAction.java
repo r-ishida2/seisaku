@@ -23,6 +23,6 @@ public class SubjectDeleteAction extends Action {
         Subject subject = dao.get(cd, school); // School オブジェクトを渡す
 
         req.setAttribute("subject", subject);
-        return "subject_delete.jsp";
+        return "/main/subject_delete.jsp";
     }
 }

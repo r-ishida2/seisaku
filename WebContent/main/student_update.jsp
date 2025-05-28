@@ -11,6 +11,7 @@
 
     <!-- 右コンテンツエリア -->
     <div class="content-container">
+    <h2>学生情報変更</h2>
     <form action="StudentUpdateExecute.action" method="post">
     	<label>入学年度</label>
 		<a>${student.entYear}</a>

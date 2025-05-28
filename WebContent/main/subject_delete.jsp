@@ -11,16 +11,12 @@
 
     <!-- 右コンテンツエリア -->
     <div class="content-container">
-    <h2>学生情報変更</h2>
-    <form action="SubjectUpdateExecute.action" method="post">
-    	<label>科目コード</label>
-		<a>${subject.cd}</a>
-		<input type="hidden" name="cd" value="${subject.cd}">
-		<label>科目名</label>
-		<input type="text" name="name" value="${subject.name}" required>
-
-		<input type="submit" value="変更">
+    <h2>科目情報削除</h2>
+    <form action="SubjectDeleteExecute.action" method="post">
+		<a>「${subject.name}（${subject.cd}）」を削除してもよろしいですか？</a>
+		<input type="submit" value="削除">
 	</form>
+	<a href="<c:url value='/scoremanager/main/SubjectList.action'/>">戻る</a>
     </div>
 </div>
 

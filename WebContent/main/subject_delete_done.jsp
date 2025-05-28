@@ -5,9 +5,9 @@
         <%@ include file="../side.jsp" %>
     </div>
     <div class="content-container">
-    <h2>学生情報登録</h2>
+    <h2>科目情報削除</h2>
     <label>${message}</label>
-    <a href="<c:url value='/scoremanager/main/StudentList.action'/>">学生一覧</a>
+    <a href="<c:url value='/scoremanager/main/SubjectList.action'/>">科目一覧</a>
     </div>
 </div>
 <%@ include file="../footer.jsp" %>
