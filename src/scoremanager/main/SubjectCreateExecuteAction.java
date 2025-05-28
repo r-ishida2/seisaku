@@ -17,7 +17,7 @@ public class SubjectCreateExecuteAction extends Action {
         String name = request.getParameter("name");
 
         // セッションからログイン中のTeacherを取得
-        Teacher teacher = (Teacher) request.getSession().getAttribute("user");
+        Teacher teacher = (Teacher) request.getSession().getAttribute("NAME");
 
         if (teacher == null) {
             return "login.jsp"; // ログインしていない場合はログイン画面へ
@@ -33,10 +33,14 @@ public class SubjectCreateExecuteAction extends Action {
         boolean result = new SubjectDao().save(subject);
 
         // リクエスト属性に結果を格納
-        request.setAttribute("result", result);
+        if (result) {
+            request.setAttribute("message", "科目情報の登録に成功しました。");
+        } else {
+            request.setAttribute("message", "科目情報の登録に失敗しました。");
+        }
 
         // 完了画面または一覧画面に遷移（必要に応じて変更）
-        return "subject_create_done.jsp";
+        return "/main/subject_create_done.jsp";
     }
 }
 
