@@ -21,7 +21,7 @@ public class TestRegistAction extends Action {
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
         // セッションからログイン中の先生を取得
         HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         if (teacher == null) {
             req.setAttribute("error", "ログイン情報が取得できませんでした");
@@ -48,7 +48,7 @@ public class TestRegistAction extends Action {
         req.setAttribute("classNumList", classNumList);
         req.setAttribute("studentList", studentList);
 
-        return "/view/test_regist.jsp";
+        return "/main/test_regist.jsp";
     }
 }
 
