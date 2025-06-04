@@ -24,12 +24,11 @@ public class TestListSubjectExecuteAction extends Action {
 
         if (teacher == null) {
             req.setAttribute("error", "ログイン情報が確認できません。");
-            return "/error.jsp";
+            return "/main/test_list_subject.jsp";
         }
 
         School school = teacher.getSchool();
 
-        // パラメータ取得
         String entYearStr = req.getParameter("ent_year");
         String classNum = req.getParameter("class_num");
         String subjectCd = req.getParameter("subject_cd");
@@ -37,7 +36,7 @@ public class TestListSubjectExecuteAction extends Action {
 
         if (entYearStr == null || classNum == null || subjectCd == null || pointNoStr == null) {
             req.setAttribute("error", "必要なパラメータが不足しています。");
-            return "/error.jsp";
+            return "/main/test_list_subject.jsp";
         }
 
         int entYear;
@@ -47,23 +46,20 @@ public class TestListSubjectExecuteAction extends Action {
             pointNo = Integer.parseInt(pointNoStr);
         } catch (NumberFormatException e) {
             req.setAttribute("error", "学年または回数が数値として不正です。");
-            return "/error.jsp";
+            return "/main/test_list_subject.jsp";
         }
 
-        // 教科の取得（学校に紐づけて取得）
         SubjectDao subjectDao = new SubjectDao();
         Subject subject = subjectDao.get(subjectCd, school);
 
         if (subject == null) {
             req.setAttribute("error", "指定された教科が見つかりません。");
-            return "/error.jsp";
+            return "/main/test_list_subject.jsp";
         }
 
-        // 成績の取得
         TestDao testDao = new TestDao();
         List<Test> testList = testDao.filter(entYear, classNum, subject, pointNo, school);
 
-        // 値をJSPへ渡す
         req.setAttribute("testList", testList);
         req.setAttribute("entYear", entYear);
         req.setAttribute("classNum", classNum);

@@ -19,57 +19,58 @@ import tool.Action;
 
 public class TestListStudentExecuteAction extends Action {
 
-    @Override
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+	@Override
+	public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
-        HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("NAME");
+	    HttpSession session = req.getSession();
+	    Teacher teacher = (Teacher) session.getAttribute("NAME");
 
-        if (teacher == null) {
-            req.setAttribute("error", "ログイン情報が確認できません。");
-            return "/error.jsp";
-        }
+	    if (teacher == null) {
+	        req.setAttribute("error", "ログイン情報が確認できません。");
+	        return "/main/test_list_student.jsp"; // error.jsp に飛ばさない
+	    }
 
-        School school = teacher.getSchool();
-        String studentNo = req.getParameter("student_no");
+	    School school = teacher.getSchool();
+	    String studentNo = req.getParameter("student_no");
 
-        if (studentNo == null || studentNo.isEmpty()) {
-            req.setAttribute("error", "生徒番号が指定されていません。");
-            return "/error.jsp";
-        }
+	    if (studentNo == null || studentNo.isEmpty()) {
+	        req.setAttribute("error", "生徒番号が指定されていません。");
+	        return "/main/test_list_student.jsp";
+	    }
 
-        StudentDao studentDao = new StudentDao();
-        Student student = studentDao.get(studentNo);
+	    StudentDao studentDao = new StudentDao();
+	    Student student = studentDao.get(studentNo);
 
-        if (student == null) {
-            req.setAttribute("error", "指定された生徒が見つかりません。");
-            return "/error.jsp";
-        }
+	    if (student == null) {
+	        req.setAttribute("error", "指定された生徒が見つかりません。");
+	        return "/main/test_list_student.jsp";
+	    }
 
-        SubjectDao subjectDao = new SubjectDao();
-        List<Subject> subjects = subjectDao.filter(school);
+	    SubjectDao subjectDao = new SubjectDao();
+	    List<Subject> subjects = subjectDao.filter(school);
 
-        List<Test> testList = new ArrayList<>();
-        TestDao testDao = new TestDao();
+	    List<Test> testList = new ArrayList<>();
+	    TestDao testDao = new TestDao();
 
-        for (Subject subject : subjects) {
-            for (int pointNo = 1; pointNo <= 3; pointNo++) {
-                List<Test> partial = testDao.filter(
-                    student.getEntYear(),
-                    student.getClassNum(),
-                    subject,
-                    pointNo,
-                    school
-                );
-                testList.addAll(partial);
-            }
-        }
+	    for (Subject subject : subjects) {
+	        for (int pointNo = 1; pointNo <= 3; pointNo++) {
+	            List<Test> partial = testDao.filter(
+	                student.getEntYear(),
+	                student.getClassNum(),
+	                subject,
+	                pointNo,
+	                school
+	            );
+	            testList.addAll(partial);
+	        }
+	    }
 
-        req.setAttribute("student", student);
-        req.setAttribute("testList", testList);
+	    req.setAttribute("student", student);
+	    req.setAttribute("testList", testList);
 
-        return "/main/test_list_student.jsp";
-    }
+	    return "/main/test_list_student.jsp";
+	}
 }
+
 
 
