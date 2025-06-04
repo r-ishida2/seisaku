@@ -9,7 +9,7 @@
     </div>
 
     <!-- 右コンテンツエリア -->
-    <p>エラーが発生しました</p>
+    <p>${ error }</p>
 </div>
 
 <%@ include file="footer.jsp" %>

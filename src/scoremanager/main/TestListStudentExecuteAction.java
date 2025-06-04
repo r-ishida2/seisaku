@@ -23,11 +23,11 @@ public class TestListStudentExecuteAction extends Action {
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         if (teacher == null) {
             req.setAttribute("error", "ログイン情報が確認できません。");
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
 
         School school = teacher.getSchool();
@@ -35,7 +35,7 @@ public class TestListStudentExecuteAction extends Action {
 
         if (studentNo == null || studentNo.isEmpty()) {
             req.setAttribute("error", "生徒番号が指定されていません。");
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
 
         StudentDao studentDao = new StudentDao();
@@ -43,7 +43,7 @@ public class TestListStudentExecuteAction extends Action {
 
         if (student == null) {
             req.setAttribute("error", "指定された生徒が見つかりません。");
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
 
         SubjectDao subjectDao = new SubjectDao();
@@ -68,7 +68,7 @@ public class TestListStudentExecuteAction extends Action {
         req.setAttribute("student", student);
         req.setAttribute("testList", testList);
 
-        return "/view/test_list_student.jsp";
+        return "/main/test_list_student.jsp";
     }
 }
 

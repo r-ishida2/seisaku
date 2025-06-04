@@ -19,11 +19,11 @@ public class TestListAction extends Action {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
         HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         if (teacher == null) {
             req.setAttribute("error", "ログインしていません。");
-            return "/view/error.jsp";
+            return "/main/error.jsp";
         }
 
         School school = teacher.getSchool();
@@ -40,7 +40,7 @@ public class TestListAction extends Action {
         req.setAttribute("subjectList", subjectList);
         req.setAttribute("studentList", studentList);
 
-        return "/view/test_list.jsp";
+        return "/main/test_list.jsp";
     }
 }
 

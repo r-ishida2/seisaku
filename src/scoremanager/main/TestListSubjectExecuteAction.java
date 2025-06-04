@@ -20,11 +20,11 @@ public class TestListSubjectExecuteAction extends Action {
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("NAME");
 
         if (teacher == null) {
             req.setAttribute("error", "ログイン情報が確認できません。");
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
 
         School school = teacher.getSchool();
@@ -37,7 +37,7 @@ public class TestListSubjectExecuteAction extends Action {
 
         if (entYearStr == null || classNum == null || subjectCd == null || pointNoStr == null) {
             req.setAttribute("error", "必要なパラメータが不足しています。");
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
 
         int entYear;
@@ -47,7 +47,7 @@ public class TestListSubjectExecuteAction extends Action {
             pointNo = Integer.parseInt(pointNoStr);
         } catch (NumberFormatException e) {
             req.setAttribute("error", "学年または回数が数値として不正です。");
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
 
         // 教科の取得（学校に紐づけて取得）
@@ -56,7 +56,7 @@ public class TestListSubjectExecuteAction extends Action {
 
         if (subject == null) {
             req.setAttribute("error", "指定された教科が見つかりません。");
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
 
         // 成績の取得
@@ -70,7 +70,7 @@ public class TestListSubjectExecuteAction extends Action {
         req.setAttribute("subject", subject);
         req.setAttribute("pointNo", pointNo);
 
-        return "/view/test_list_subject.jsp";
+        return "/main/test_list_subject.jsp";
     }
 }
 
