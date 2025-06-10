@@ -18,7 +18,7 @@ public class TestDao extends Dao {
         Test test = null;
 
         try (Connection connection = getConnection()) {
-            String sql = baseSql + " AND student_no=? AND subject_cd=? AND school_cd=? AND point_no=?";
+            String sql = baseSql + " AND student_no=? AND subject_cd=? AND school_cd=? AND no=?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, student.getNo());
                 stmt.setString(2, subject.getCd());
@@ -70,7 +70,7 @@ public class TestDao extends Dao {
         test.setStudent(student);
         test.setSubject(subject);
         test.setSchool(school);
-        test.setNo(rSet.getInt("point_no"));
+        test.setNo(rSet.getInt("no"));
         test.setPoint(rSet.getInt("point"));
         test.setClassNum(rSet.getString("class_num"));
 
@@ -81,10 +81,12 @@ public class TestDao extends Dao {
         List<Test> list = new ArrayList<>();
 
         try (Connection connection = getConnection()) {
-            String sql =
-                "SELECT t.* FROM TEST t " +
-                "JOIN STUDENT s ON t.student_no = s.no AND t.school_cd = s.school_cd " +
-                "WHERE s.ent_year = ? AND t.class_num = ? AND t.subject_cd = ? AND t.point_no = ? AND t.school_cd = ?";
+        	// filter() 内の SQL
+        	String sql =
+        	    "SELECT t.* FROM TEST t " +
+        	    "JOIN STUDENT s ON t.student_no = s.no AND t.school_cd = s.school_cd " +
+        	    "WHERE s.ent_year = ? AND t.class_num = ? AND t.subject_cd = ? AND t.no = ? AND t.school_cd = ?";
+
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setInt(1, ent_Year);
@@ -115,9 +117,10 @@ public class TestDao extends Dao {
     }
 
     public boolean save(Test test, Connection connection) throws Exception {
-        String selectSql = "SELECT COUNT(*) FROM TEST WHERE student_no=? AND subject_cd=? AND school_cd=? AND point_no=?";
-        String insertSql = "INSERT INTO TEST(student_no, subject_cd, school_cd, point_no, point, class_num) VALUES(?, ?, ?, ?, ?, ?)";
-        String updateSql = "UPDATE TEST SET point=?, class_num=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND point_no=?";
+    	String selectSql = "SELECT COUNT(*) FROM TEST WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?";
+    	String insertSql = "INSERT INTO TEST(student_no, subject_cd, school_cd, no, point, class_num) VALUES(?, ?, ?, ?, ?, ?)";
+    	String updateSql = "UPDATE TEST SET point=?, class_num=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?";
+
 
         try (
             PreparedStatement selectStmt = connection.prepareStatement(selectSql);

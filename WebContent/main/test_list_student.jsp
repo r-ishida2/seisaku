@@ -10,7 +10,8 @@
 
 		<form action="TestListSubjectExecute.action" method="post">
 		<p>科目情報</p>
-			<label>入学年度</label> <select name="ent_year">
+			<label>入学年度</label>
+			<select name="ent_year" required>
 				<option value="">---------</option>
 				<option value="2021"
 					<c:if test="${ent_year == '2021'}">selected</c:if>>2021</option>
@@ -24,7 +25,7 @@
 					<c:if test="${ent_year == '2025'}">selected</c:if>>2025</option>
 			</select>
 			<label>クラス</label>
-			<select name="class_num">
+			<select name="class_num" required>
 				<option value="">--------</option>
 				<option value="201"
 					<c:if test="${class_num == '201'}">selected</c:if>>201</option>
@@ -38,13 +39,14 @@
 					<c:if test="${class_num == '205'}">selected</c:if>>205</option>
 			</select>
 			<label>科目</label>
-            <select name="subject">
+            <select name="subject_cd" required>
                 <option value="">--------</option>
-                <option value="Python" <c:if test="${subject == 'Python'}">selected</c:if>>Python</option>
-                <option value="Java" <c:if test="${subject == 'Java'}">selected</c:if>>Java</option>
-                <option value="Script" <c:if test="${subject == 'Script'}">selected</c:if>>Script</option>
-                <option value="Flask" <c:if test="${subject == 'Flask'}">selected</c:if>>Flask</option>
-                <option value="AWS" <c:if test="${subject == 'AWS'}">selected</c:if>>AWS</option>
+                <option value="Python" <c:if test="${subject_cd == 'Python'}">selected</c:if>>Python</option>
+                <option value="Java" <c:if test="${subject_cd == 'Java'}">selected</c:if>>Java</option>
+                <option value="Script" <c:if test="${subject_cd == 'Script'}">selected</c:if>>Script</option>
+                <option value="Flask" <c:if test="${subject_cd == 'Flask'}">selected</c:if>>Flask</option>
+                <option value="AWS" <c:if test="${subject_cd == 'AWS'}">selected</c:if>>AWS</option>
+                <option value="AAA" <c:if test="${subject_cd == 'AAA'}">selected</c:if>>AAA</option>
             </select>
 			<input type="hidden" name="is_attend" value="true">
 			<input type="submit" value="検索">
