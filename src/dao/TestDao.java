@@ -27,7 +27,14 @@ public class TestDao extends Dao {
 
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
-                    test = postFilter(rs, school).get(0);
+                    List<Test> resultList = new ArrayList<>();
+                    resultList.add(buildTestFromResultSet(rs, school));
+                    while (rs.next()) {
+                        resultList.add(buildTestFromResultSet(rs, school));
+                    }
+                    if (!resultList.isEmpty()) {
+                        test = resultList.get(0);
+                    }
                 }
             }
         }
@@ -36,31 +43,49 @@ public class TestDao extends Dao {
 
     public List<Test> postFilter(ResultSet rSet, School school) throws Exception {
         List<Test> list = new ArrayList<>();
-        while (rSet.next()) {
-            Test test = new Test();
-            Student student = new Student();
-            Subject subject = new Subject();
 
-            student.setNo(rSet.getString("student_no"));
-            subject.setCd(rSet.getString("subject_cd"));
-
-            test.setStudent(student);
-            test.setSubject(subject);
-            test.setSchool(school);
-            test.setNo(rSet.getInt("point_no"));
-            test.setPoint(rSet.getInt("point"));
-            test.setClassNum(rSet.getString("class_num")); // 追加（カラムがある前提）
-
-            list.add(test);
+        try {
+            if (rSet.getRow() != 0) {
+                list.add(buildTestFromResultSet(rSet, school));
+            }
+        } catch (Exception e) {
+            // getRow()未対応ドライバを考慮して無視
         }
+
+        while (rSet.next()) {
+            list.add(buildTestFromResultSet(rSet, school));
+        }
+
         return list;
+    }
+
+    private Test buildTestFromResultSet(ResultSet rSet, School school) throws Exception {
+        Test test = new Test();
+        Student student = new Student();
+        Subject subject = new Subject();
+
+        student.setNo(rSet.getString("student_no"));
+        subject.setCd(rSet.getString("subject_cd"));
+
+        test.setStudent(student);
+        test.setSubject(subject);
+        test.setSchool(school);
+        test.setNo(rSet.getInt("point_no"));
+        test.setPoint(rSet.getInt("point"));
+        test.setClassNum(rSet.getString("class_num"));
+
+        return test;
     }
 
     public List<Test> filter(int ent_Year, String class_Num, Subject subject, int num, School school) throws Exception {
         List<Test> list = new ArrayList<>();
 
         try (Connection connection = getConnection()) {
-            String sql = baseSql + " AND ent_year=? AND class_num=? AND subject_cd=? AND point_no=? AND school_cd=?";
+            String sql =
+                "SELECT t.* FROM TEST t " +
+                "JOIN STUDENT s ON t.student_no = s.no AND t.school_cd = s.school_cd " +
+                "WHERE s.ent_year = ? AND t.class_num = ? AND t.subject_cd = ? AND t.point_no = ? AND t.school_cd = ?";
+
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setInt(1, ent_Year);
                 stmt.setString(2, class_Num);
@@ -90,23 +115,43 @@ public class TestDao extends Dao {
     }
 
     public boolean save(Test test, Connection connection) throws Exception {
-        String sql = "INSERT INTO TEST(student_no, subject_cd, school_cd, point_no, point, class_num) "
-                   + "VALUES(?, ?, ?, ?, ?, ?) "
-                   + "ON DUPLICATE KEY UPDATE point=?, class_num=?";
+        String selectSql = "SELECT COUNT(*) FROM TEST WHERE student_no=? AND subject_cd=? AND school_cd=? AND point_no=?";
+        String insertSql = "INSERT INTO TEST(student_no, subject_cd, school_cd, point_no, point, class_num) VALUES(?, ?, ?, ?, ?, ?)";
+        String updateSql = "UPDATE TEST SET point=?, class_num=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND point_no=?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, test.getStudent().getNo());
-            stmt.setString(2, test.getSubject().getCd());
-            stmt.setString(3, test.getSchool().getCd());
-            stmt.setInt(4, test.getNo());
-            stmt.setInt(5, test.getPoint());
-            stmt.setString(6, test.getClass_Num());
+        try (
+            PreparedStatement selectStmt = connection.prepareStatement(selectSql);
+        ) {
+            selectStmt.setString(1, test.getStudent().getNo());
+            selectStmt.setString(2, test.getSubject().getCd());
+            selectStmt.setString(3, test.getSchool().getCd());
+            selectStmt.setInt(4, test.getNo());
 
-            stmt.setInt(7, test.getPoint());
-            stmt.setString(8, test.getClass_Num());
+            ResultSet rs = selectStmt.executeQuery();
+            rs.next();
+            int count = rs.getInt(1);
 
-            int result = stmt.executeUpdate();
-            return result > 0;
+            if (count > 0) {
+                try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+                    updateStmt.setInt(1, test.getPoint());
+                    updateStmt.setString(2, test.getClass_Num());
+                    updateStmt.setString(3, test.getStudent().getNo());
+                    updateStmt.setString(4, test.getSubject().getCd());
+                    updateStmt.setString(5, test.getSchool().getCd());
+                    updateStmt.setInt(6, test.getNo());
+                    return updateStmt.executeUpdate() > 0;
+                }
+            } else {
+                try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+                    insertStmt.setString(1, test.getStudent().getNo());
+                    insertStmt.setString(2, test.getSubject().getCd());
+                    insertStmt.setString(3, test.getSchool().getCd());
+                    insertStmt.setInt(4, test.getNo());
+                    insertStmt.setInt(5, test.getPoint());
+                    insertStmt.setString(6, test.getClass_Num());
+                    return insertStmt.executeUpdate() > 0;
+                }
+            }
         }
     }
 }
