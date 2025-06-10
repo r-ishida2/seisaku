@@ -22,47 +22,73 @@ public class TestRegistExecuteAction extends Action {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
         try {
-            // ログイン情報から学校取得
+            // セッションからログイン教師を取得
             HttpSession session = req.getSession();
-            Teacher teacher = (Teacher) session.getAttribute("user");
-
+            Teacher teacher = (Teacher) session.getAttribute("NAME");
             if (teacher == null) {
                 req.setAttribute("error", "ログイン情報が取得できません");
-                return "/view/error.jsp";
+                return "/error.jsp";
             }
-
             School school = teacher.getSchool();
 
-            // パラメータ取得
-            String subjectCd = req.getParameter("subject_cd");
+            // リクエストパラメータ取得
+            String subjectCd = req.getParameter("subject_cd");  // JSPに合わせて修正
             String classNum = req.getParameter("class_num");
-            String[] studentNos = req.getParameterValues("no");
-            String[] points = req.getParameterValues("point");
+            String noStr = req.getParameter("no"); // 回数
+            String[] studentNos = req.getParameterValues("noList");
+            String[] points = req.getParameterValues("pointList");
 
-            if (subjectCd == null || classNum == null || studentNos == null || points == null) {
-                req.setAttribute("error", "すべての項目を入力してください");
-                return "/view/error.jsp";
+            // 入力チェック
+            if (subjectCd == null || subjectCd.isEmpty() ||
+                classNum == null || classNum.isEmpty() ||
+                noStr == null || noStr.isEmpty() ||
+                studentNos == null || points == null ||
+                studentNos.length != points.length) {
+                req.setAttribute("error", "すべての項目を正しく入力してください");
+                return "/error.jsp";
             }
 
-            // 教科取得
+            int no = 0;
+            try {
+                no = Integer.parseInt(noStr);
+            } catch (NumberFormatException e) {
+                req.setAttribute("error", "回数の形式が不正です");
+                return "/error.jsp";
+            }
+
+            // 科目取得
             SubjectDao subjectDao = new SubjectDao();
             Subject subject = subjectDao.get(subjectCd, school);
+            if (subject == null) {
+                req.setAttribute("error", "指定された科目が存在しません");
+                return "/error.jsp";
+            }
 
-            // 生徒情報と点数を Test に詰める
-            List<Test> testList = new ArrayList<>();
             StudentDao studentDao = new StudentDao();
+            List<Test> testList = new ArrayList<>();
 
             for (int i = 0; i < studentNos.length; i++) {
-                String no = studentNos[i];
-                int point = Integer.parseInt(points[i]);
+                String studentNo = studentNos[i];
+                int point = 0;
+                try {
+                    point = Integer.parseInt(points[i]);
+                } catch (NumberFormatException e) {
+                    req.setAttribute("error", "点数は数値で入力してください (学生番号:" + studentNo + ")");
+                    return "/error.jsp";
+                }
 
-                Student student = studentDao.get(no);
+                Student student = studentDao.get(studentNo);
+                if (student == null) {
+                    req.setAttribute("error", "学生番号 " + studentNo + " の生徒情報が存在しません");
+                    return "/error.jsp";
+                }
 
                 Test test = new Test();
                 test.setStudent(student);
                 test.setSchool(school);
                 test.setSubject(subject);
                 test.setClassNum(classNum);
+                test.setNo(no);
                 test.setPoint(point);
 
                 testList.add(test);
@@ -73,16 +99,15 @@ public class TestRegistExecuteAction extends Action {
             boolean success = testDao.save(testList);
 
             if (!success) {
-                req.setAttribute("error", "登録に失敗しました");
-                return "/view/error.jsp";
+                req.setAttribute("error", "成績登録に失敗しました");
+                return "/error.jsp";
             }
 
-            return "/view/test_regist_done.jsp";
+            return "/main/test_regist_done.jsp";
 
         } catch (Exception e) {
             req.setAttribute("error", "例外が発生しました: " + e.getMessage());
-            return "/view/error.jsp";
+            return "/error.jsp";
         }
     }
 }
-
