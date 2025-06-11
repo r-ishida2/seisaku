@@ -41,12 +41,13 @@
 			<label>科目</label>
             <select name="subject_cd" required>
                 <option value="">--------</option>
-                <option value="Python" <c:if test="${subject_cd == 'Python'}">selected</c:if>>Python</option>
-                <option value="Java" <c:if test="${subject_cd == 'Java'}">selected</c:if>>Java</option>
-                <option value="Script" <c:if test="${subject_cd == 'Script'}">selected</c:if>>Script</option>
-                <option value="Flask" <c:if test="${subject_cd == 'Flask'}">selected</c:if>>Flask</option>
-                <option value="AWS" <c:if test="${subject_cd == 'AWS'}">selected</c:if>>AWS</option>
-                <option value="AAA" <c:if test="${subject_cd == 'AAA'}">selected</c:if>>AAA</option>
+                <option value="A01" <c:if test="${subject_cd == 'A01'}">selected</c:if>>Python</option>
+                <option value="Python" <c:if test="${subject_cd == 'Python'}">selected</c:if>>Python(仮)</option>
+                <option value="Java" <c:if test="${subject_cd == 'Java'}">selected</c:if>>Java(仮)</option>
+                <option value="Script" <c:if test="${subject_cd == 'Script'}">selected</c:if>>Script(仮)</option>
+                <option value="Flask" <c:if test="${subject_cd == 'Flask'}">selected</c:if>>Flask(仮)</option>
+                <option value="AWS" <c:if test="${subject_cd == 'AWS'}">selected</c:if>>AWS(仮)</option>
+                <option value="AAA" <c:if test="${subject_cd == 'AAA'}">selected</c:if>>AAA(仮)</option>
             </select>
 			<input type="hidden" name="is_attend" value="true">
 			<input type="submit" value="検索">
@@ -63,16 +64,18 @@
 			<p style="color: red; font-weight: bold;">${error}</p>
 		</c:if>
 		<c:choose>
-			<c:when test="${students.size() > 0}">
-				<div>検索結果: ${students.size()} 件</div>
+			<c:when test="${testList.size() > 0}">
+				<div>検索結果: ${testList.size()} 件</div>
 				<table style="border-collapse: separate; border-spacing: 10px;">
 				<tr>
 					<th>入学年度</th>
-					<th>クラス番号</th>
+					<th>クラス</th>
 					<th>学生番号</th>
 					<th>氏名</th>
+					<th>1</th>
+					<th>2</th>
 				</tr>
-				<c:forEach var="item" items="${students}">
+				<c:forEach var="item" items="${testList}">
 				<tr>
 					<td>${item.entYear}</td>
 					<td>${item.classNum}</td>
