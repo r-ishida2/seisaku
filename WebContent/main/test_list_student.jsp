@@ -64,28 +64,31 @@
 			<p style="color: red; font-weight: bold;">${error}</p>
 		</c:if>
 		<c:choose>
-			<c:when test="${student.size() > 0}">
-				<div>検索結果: ${student.size()} 件</div>
-				<table style="border-collapse: separate; border-spacing: 10px;">
-				<tr>
-					<th>入学年度</th>
-					<th>クラス番号</th>
-					<th>学生番号</th>
-					<th>氏名</th>
-				</tr>
-				<c:forEach var="item" items="${student}">
-				<tr>
-					<td>${item.entYear}</td>
-					<td>${item.classNum}</td>
+			<c:when test="${not empty testList}">
+			  <div>検索結果: ${testList.size()} 件</div>
+
+			  <table style="border-collapse: separate; border-spacing: 10px;">
+			    <tr>
+			      <th>科目名</th>
+			      <th>科目コード</th>
+			      <th>テスト回数</th>
+			      <th>点数</th>
+			    </tr>
+			    <c:forEach var="item" items="${testList}">
+			      <tr>
+			        <td>${item.subject.name}</td>
+			        <td>${item.subject.cd}</td>
 					<td>${item.no}</td>
-					<td>${item.name}</td>
-				</tr>
-				</c:forEach>
-				</table>
+					<td>${item.point}</td>
+			      </tr>
+			    </c:forEach>
+			  </table>
 			</c:when>
+
 			<c:otherwise>
-				<p>学生情報が存在しませんでしたstudent</p>
+			  <p>テスト情報が見つかりませんでした。</p>
 			</c:otherwise>
+
 		</c:choose>
 	</div>
 </div>
