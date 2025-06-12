@@ -16,13 +16,21 @@
     <!-- 右コンテンツエリア -->
     <div class="content-container">
     <h2>メニュー</h2>
-        <ul class="nav">
-		<li><a href="<c:url value='scoremanager/main/StudentList.action'/>">学生管理</a></li>
-		<li>成績管理</li>
-		<li><a href="<c:url value='scoremanager/main/TestRegist.action'/>">成績登録</a></li>
-		<li><a href="<c:url value='scoremanager/main/TestList.action'/>">成績参照</a></li>
-		<li><a href="<c:url value='scoremanager/main/SubjectList.action'/>">科目管理</a></li>
-</ul>
+		<ul class="nav">
+		    <li>
+		        <span class="title"></span>
+		        <a href="<c:url value='scoremanager/main/StudentList.action'/>">学生管理</a>
+		    </li>
+		    <li>
+		        <span class="title">成績管理</span>
+		        <a href="<c:url value='scoremanager/main/TestRegist.action'/>">成績登録</a>
+		        <a href="<c:url value='scoremanager/main/TestList.action'/>">成績参照</a>
+		    </li>
+		    <li>
+		        <span class="title"></span>
+		        <a href="<c:url value='scoremanager/main/SubjectList.action'/>">科目管理</a>
+		    </li>
+		</ul>
     </div>
 </div>
 

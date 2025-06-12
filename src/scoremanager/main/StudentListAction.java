@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import bean.School;
 import bean.Student;
 import bean.Teacher;
+import dao.ClassNumDao;
 import dao.StudentDao;
 import tool.Action;
 
@@ -29,6 +30,9 @@ public class StudentListAction extends Action {
 
         String entYearStr = request.getParameter("ent_year");
         String classNum = request.getParameter("class_num");
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classNums = classNumDao.filter(school);
+        request.setAttribute("classNums", classNums);
 
         String[] isAttendValues = request.getParameterValues("is_attend");
         Boolean isAttend = null;
