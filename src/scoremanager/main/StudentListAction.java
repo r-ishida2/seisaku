@@ -1,5 +1,6 @@
 package scoremanager.main;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +34,12 @@ public class StudentListAction extends Action {
         ClassNumDao classNumDao = new ClassNumDao();
         List<String> classNums = classNumDao.filter(school);
         request.setAttribute("classNums", classNums);
+        int currentYear = Year.now().getValue();  // 例：2025
+        List<String> entYears = new ArrayList<>();
+        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
+            entYears.add(String.valueOf(i));
+        }
+        request.setAttribute("entYears", entYears);
 
         String[] isAttendValues = request.getParameterValues("is_attend");
         Boolean isAttend = null;

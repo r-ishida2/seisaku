@@ -10,18 +10,12 @@
 		<a href="<c:url value='/scoremanager.main.StudentCreate.action'/>">新規登録</a>
 
 		<form action="StudentList.action" method="post">
-			<label>入学年度</label> <select name="ent_year">
-				<option value="">---------</option>
-				<option value="2021"
-					<c:if test="${ent_year == '2021'}">selected</c:if>>2021</option>
-				<option value="2022"
-					<c:if test="${ent_year == '2022'}">selected</c:if>>2022</option>
-				<option value="2023"
-					<c:if test="${ent_year == '2023'}">selected</c:if>>2023</option>
-				<option value="2024"
-					<c:if test="${ent_year == '2024'}">selected</c:if>>2024</option>
-				<option value="2025"
-					<c:if test="${ent_year == '2025'}">selected</c:if>>2025</option>
+			<label>入学年度</label>
+			<select name="ent_year">
+			    <option value="">---------</option>
+			    <c:forEach var="year" items="${entYears}">
+			        <option value="${year}" <c:if test="${ent_year == year}">selected</c:if>>${year}</option>
+			    </c:forEach>
 			</select>
 			<label>クラス</label>
 			<select name="class_num">
