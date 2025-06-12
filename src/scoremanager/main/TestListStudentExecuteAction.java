@@ -73,6 +73,8 @@ public class TestListStudentExecuteAction extends Action {
 	            );
 	            System.out.println("  → 回数: " + pointNo + " 件数: " + partial.size());
 	            for (Test test : partial) {
+	                // ★ 科目情報をTestに紐づける（重要）
+	                test.setSubject(subject);
 	                System.out.println("    - 点数: " + test.getPoint() + " 科目: " + test.getSubject().getName() + " 回数: " + test.getNo());
 	            }
 	            testList.addAll(partial);
