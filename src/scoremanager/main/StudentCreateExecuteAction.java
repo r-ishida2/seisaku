@@ -1,6 +1,9 @@
 package scoremanager.main;
 
 import java.time.LocalDate;
+import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,12 +12,15 @@ import javax.servlet.http.HttpSession;
 import bean.School;
 import bean.Student;
 import bean.Teacher;
+import dao.ClassNumDao;
 import dao.StudentDao;
 import tool.Action;
 
 public class StudentCreateExecuteAction extends Action {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+
 
         // フォームからのパラメータ取得
         String no = req.getParameter("no");
@@ -42,6 +48,17 @@ public class StudentCreateExecuteAction extends Action {
         int entYear = Integer.parseInt(entYearStr);
         String schoolCd = teacher.getSchool().getCd();
         boolean isAttend = (entYear <= LocalDate.now().getYear());
+
+        School schools = teacher.getSchool();
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classNums = classNumDao.filter(schools);
+        req.setAttribute("classNums", classNums);
+        int currentYear = Year.now().getValue();  // 例：2025
+        List<String> entYears = new ArrayList<>();
+        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
+            entYears.add(String.valueOf(i));
+        }
+        req.setAttribute("entYears", entYears);
 
         // 学生番号の重複チェック
         StudentDao dao = new StudentDao();
