@@ -10,10 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.School;
+import bean.Student;
 import bean.Subject;
 import bean.Teacher;
 import bean.Test;
 import bean.TestListSubject;
+import dao.StudentDao;
 import dao.SubjectDao;
 import dao.TestDao;
 import tool.Action;
@@ -43,7 +45,9 @@ public class TestListSubjectExecuteAction extends Action {
 
         System.out.println("受信パラメータ: ent_year=" + entYearStr + ", class_num=" + classNum + ", subject_cd=" + subjectCd);
 
-        if (entYearStr == null || classNum == null || subjectCd == null) {
+        if (entYearStr == null || entYearStr.isEmpty() ||
+            classNum == null || classNum.isEmpty() ||
+            subjectCd == null || subjectCd.isEmpty()) {
             System.out.println("パラメータ不足");
             req.setAttribute("error", "必要なパラメータが不足しています。");
             return "/main/test_list_subject.jsp";
@@ -70,6 +74,7 @@ public class TestListSubjectExecuteAction extends Action {
         System.out.println("教科取得成功: " + subject.getCd());
 
         TestDao testDao = new TestDao();
+        StudentDao studentDao = new StudentDao();
 
         // 1回目・2回目のテストを取得
         List<Test> testList1 = testDao.filter(entYear, classNum, subject, 1, school);
@@ -82,29 +87,37 @@ public class TestListSubjectExecuteAction extends Action {
 
         for (Test t : testList1) {
             String studentNo = t.getStudent().getNo();
+            Student student = studentDao.get(studentNo);  // ここで学生情報を取得し名前を得る
+
             TestListSubject bean = new TestListSubject();
             bean.setEntYear(entYear);
             bean.setStudentNo(studentNo);
             bean.setClassNum(classNum);
-            bean.setStudentName(""); // 後で必要なら設定
+            bean.setStudentName(student != null ? student.getName() : "不明");
             bean.setPoints(new HashMap<>());
             bean.getPoints().put(1, t.getPoint());
             map.put(studentNo, bean);
+
+            System.out.println("1回目: studentNo=" + studentNo + ", name=" + bean.getStudentName() + ", point=" + t.getPoint());
         }
 
         for (Test t : testList2) {
             String studentNo = t.getStudent().getNo();
             TestListSubject bean = map.get(studentNo);
             if (bean == null) {
+                Student student = studentDao.get(studentNo); // 同様にここでも取得
+
                 bean = new TestListSubject();
                 bean.setEntYear(entYear);
                 bean.setStudentNo(studentNo);
                 bean.setClassNum(classNum);
-                bean.setStudentName(""); // 後で必要なら設定
+                bean.setStudentName(student != null ? student.getName() : "不明");
                 bean.setPoints(new HashMap<>());
                 map.put(studentNo, bean);
             }
             bean.getPoints().put(2, t.getPoint());
+
+            System.out.println("2回目: studentNo=" + studentNo + ", name=" + bean.getStudentName() + ", point=" + t.getPoint());
         }
 
         List<TestListSubject> resultList = new ArrayList<>(map.values());
@@ -114,7 +127,10 @@ public class TestListSubjectExecuteAction extends Action {
         req.setAttribute("entYear", entYear);
         req.setAttribute("classNum", classNum);
         req.setAttribute("subject", subject);
-
+        System.out.println("testList size = " + resultList.size());
+        for(TestListSubject bean : resultList) {
+          System.out.println(bean.getStudentNo() + ": " + bean.getPoints());
+        }
         System.out.println("=== TestListSubjectExecuteAction: execute end ===");
 
         return "/main/test_list_subject.jsp";
