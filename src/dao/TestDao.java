@@ -81,12 +81,10 @@ public class TestDao extends Dao {
         List<Test> list = new ArrayList<>();
 
         try (Connection connection = getConnection()) {
-        	// filter() 内の SQL
-        	String sql =
-        	    "SELECT t.* FROM TEST t " +
-        	    "JOIN STUDENT s ON t.student_no = s.no AND t.school_cd = s.school_cd " +
-        	    "WHERE s.ent_year = ? AND t.class_num = ? AND t.subject_cd = ? AND t.no = ? AND t.school_cd = ?";
-
+            String sql =
+                "SELECT t.* FROM TEST t " +
+                "JOIN STUDENT s ON t.student_no = s.no AND t.school_cd = s.school_cd " +
+                "WHERE s.ent_year = ? AND t.class_num = ? AND t.subject_cd = ? AND t.no = ? AND t.school_cd = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setInt(1, ent_Year);
@@ -117,17 +115,15 @@ public class TestDao extends Dao {
     }
 
     public boolean save(Test test, Connection connection) throws Exception {
-    	String selectSql = "SELECT COUNT(*) FROM TEST WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?";
-    	String insertSql = "INSERT INTO TEST(student_no, subject_cd, school_cd, no, point, class_num) VALUES(?, ?, ?, ?, ?, ?)";
-    	String updateSql = "UPDATE TEST SET point=?, class_num=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?";
+        // ▼ TRIM を追加した SELECT
+        String selectSql = "SELECT COUNT(*) FROM TEST WHERE TRIM(student_no)=? AND TRIM(subject_cd)=? AND TRIM(school_cd)=? AND no=?";
+        String insertSql = "INSERT INTO TEST(student_no, subject_cd, school_cd, no, point, class_num) VALUES(?, ?, ?, ?, ?, ?)";
+        String updateSql = "UPDATE TEST SET point=?, class_num=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?";
 
-
-        try (
-            PreparedStatement selectStmt = connection.prepareStatement(selectSql);
-        ) {
-            selectStmt.setString(1, test.getStudent().getNo());
-            selectStmt.setString(2, test.getSubject().getCd());
-            selectStmt.setString(3, test.getSchool().getCd());
+        try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+            selectStmt.setString(1, test.getStudent().getNo().trim());
+            selectStmt.setString(2, test.getSubject().getCd().trim());
+            selectStmt.setString(3, test.getSchool().getCd().trim());
             selectStmt.setInt(4, test.getNo());
 
             ResultSet rs = selectStmt.executeQuery();
@@ -138,17 +134,17 @@ public class TestDao extends Dao {
                 try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
                     updateStmt.setInt(1, test.getPoint());
                     updateStmt.setString(2, test.getClass_Num());
-                    updateStmt.setString(3, test.getStudent().getNo());
-                    updateStmt.setString(4, test.getSubject().getCd());
-                    updateStmt.setString(5, test.getSchool().getCd());
+                    updateStmt.setString(3, test.getStudent().getNo().trim());
+                    updateStmt.setString(4, test.getSubject().getCd().trim());
+                    updateStmt.setString(5, test.getSchool().getCd().trim());
                     updateStmt.setInt(6, test.getNo());
                     return updateStmt.executeUpdate() > 0;
                 }
             } else {
                 try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
-                    insertStmt.setString(1, test.getStudent().getNo());
-                    insertStmt.setString(2, test.getSubject().getCd());
-                    insertStmt.setString(3, test.getSchool().getCd());
+                    insertStmt.setString(1, test.getStudent().getNo().trim());
+                    insertStmt.setString(2, test.getSubject().getCd().trim());
+                    insertStmt.setString(3, test.getSchool().getCd().trim());
                     insertStmt.setInt(4, test.getNo());
                     insertStmt.setInt(5, test.getPoint());
                     insertStmt.setString(6, test.getClass_Num());

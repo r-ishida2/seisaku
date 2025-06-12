@@ -31,10 +31,15 @@ public class TestRegistExecuteAction extends Action {
             }
             School school = teacher.getSchool();
 
-            // リクエストパラメータ取得
-            String subjectCd = req.getParameter("subject_cd");  // JSPに合わせて修正
+            // リクエストパラメータ取得＆trim
+            String subjectCd = req.getParameter("subject_cd");
             String classNum = req.getParameter("class_num");
-            String noStr = req.getParameter("no"); // 回数
+            String noStr = req.getParameter("no");
+
+            if (subjectCd != null) subjectCd = subjectCd.trim();
+            if (classNum != null) classNum = classNum.trim();
+            if (noStr != null) noStr = noStr.trim();
+
             String[] studentNos = req.getParameterValues("noList");
             String[] points = req.getParameterValues("pointList");
 
@@ -68,10 +73,11 @@ public class TestRegistExecuteAction extends Action {
             List<Test> testList = new ArrayList<>();
 
             for (int i = 0; i < studentNos.length; i++) {
-                String studentNo = studentNos[i];
+                String studentNo = studentNos[i].trim();       // ← trim追加
+                String pointStr = points[i].trim();            // ← trim追加
                 int point = 0;
                 try {
-                    point = Integer.parseInt(points[i]);
+                    point = Integer.parseInt(pointStr);
                 } catch (NumberFormatException e) {
                     req.setAttribute("error", "点数は数値で入力してください (学生番号:" + studentNo + ")");
                     return "/error.jsp";
@@ -87,14 +93,14 @@ public class TestRegistExecuteAction extends Action {
                 test.setStudent(student);
                 test.setSchool(school);
                 test.setSubject(subject);
-                test.setClassNum(classNum);
+                test.setClassNum(classNum);  // classNum も trim済み
                 test.setNo(no);
                 test.setPoint(point);
 
                 testList.add(test);
             }
 
-            // 登録処理
+            // 登録処理（UPDATE or INSERT自動判定）
             TestDao testDao = new TestDao();
             boolean success = testDao.save(testList);
 
