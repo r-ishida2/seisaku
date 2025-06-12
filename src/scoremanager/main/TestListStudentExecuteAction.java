@@ -1,5 +1,6 @@
 package scoremanager.main;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import bean.Student;
 import bean.Subject;
 import bean.Teacher;
 import bean.Test;
+import dao.ClassNumDao;
 import dao.StudentDao;
 import dao.SubjectDao;
 import dao.TestDao;
@@ -21,6 +23,23 @@ public class TestListStudentExecuteAction extends Action {
 
 	@Override
 	public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+		HttpSession sessions = req.getSession();
+	    Teacher teachers = (Teacher) sessions.getAttribute("NAME");
+
+		School schools = teachers.getSchool();
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classNums = classNumDao.filter(schools);
+        req.setAttribute("classNums", classNums);
+        int currentYear = Year.now().getValue();  // 例：2025
+        List<String> entYears = new ArrayList<>();
+        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
+            entYears.add(String.valueOf(i));
+        }
+        req.setAttribute("entYears", entYears);
+        SubjectDao subjectDao = new SubjectDao();
+        List<Subject> subjectList = subjectDao.filter(teachers.getSchool());
+        req.setAttribute("subjectList", subjectList);
 
 	    System.out.println("=== TestListStudentExecuteAction: execute start ===");
 
@@ -54,7 +73,6 @@ public class TestListStudentExecuteAction extends Action {
 
 	    System.out.println("[OK] 生徒取得成功: " + student.getName() + "（" + student.getNo() + "）");
 
-	    SubjectDao subjectDao = new SubjectDao();
 	    List<Subject> subjects = subjectDao.filter(school);
 	    System.out.println("取得した科目数: " + subjects.size());
 

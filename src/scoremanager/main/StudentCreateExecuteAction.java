@@ -36,6 +36,17 @@ public class StudentCreateExecuteAction extends Action {
             return "/login.jsp";
         }
 
+		School schools = teacher.getSchool();
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classNums = classNumDao.filter(schools);
+        req.setAttribute("classNums", classNums);
+        int currentYear = Year.now().getValue();  // 例：2025
+        List<String> entYears = new ArrayList<>();
+        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
+            entYears.add(String.valueOf(i));
+        }
+        req.setAttribute("entYears", entYears);
+
         // 入学年度が未入力ならエラーメッセージを出して戻る
         if (entYearStr == null || entYearStr.isEmpty()) {
             req.setAttribute("message", "入学年度を選択してください。");
@@ -48,17 +59,6 @@ public class StudentCreateExecuteAction extends Action {
         int entYear = Integer.parseInt(entYearStr);
         String schoolCd = teacher.getSchool().getCd();
         boolean isAttend = (entYear <= LocalDate.now().getYear());
-
-        School schools = teacher.getSchool();
-        ClassNumDao classNumDao = new ClassNumDao();
-        List<String> classNums = classNumDao.filter(schools);
-        req.setAttribute("classNums", classNums);
-        int currentYear = Year.now().getValue();  // 例：2025
-        List<String> entYears = new ArrayList<>();
-        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
-            entYears.add(String.valueOf(i));
-        }
-        req.setAttribute("entYears", entYears);
 
         // 学生番号の重複チェック
         StudentDao dao = new StudentDao();

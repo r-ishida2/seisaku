@@ -1,5 +1,7 @@
 package scoremanager.main;
 
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +12,7 @@ import bean.School;
 import bean.Student;
 import bean.Subject;
 import bean.Teacher;
+import dao.ClassNumDao;
 import dao.StudentDao;
 import dao.SubjectDao;
 import tool.Action;
@@ -39,6 +42,17 @@ public class TestListAction extends Action {
         // JSP に渡す
         req.setAttribute("subjectList", subjectList);
         req.setAttribute("studentList", studentList);
+
+        School schools = teacher.getSchool();
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classNums = classNumDao.filter(schools);
+        req.setAttribute("classNums", classNums);
+        int currentYear = Year.now().getValue();  // 例：2025
+        List<String> entYears = new ArrayList<>();
+        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
+            entYears.add(String.valueOf(i));
+        }
+        req.setAttribute("entYears", entYears);
 
         return "/main/test_list.jsp";
     }

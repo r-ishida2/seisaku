@@ -1,5 +1,6 @@
 package scoremanager.main;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import bean.Subject;
 import bean.Teacher;
 import bean.Test;
 import bean.TestListSubject;
+import dao.ClassNumDao;
 import dao.StudentDao;
 import dao.SubjectDao;
 import dao.TestDao;
@@ -24,6 +26,23 @@ public class TestListSubjectExecuteAction extends Action {
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+    	HttpSession sessions = req.getSession();
+	    Teacher teachers = (Teacher) sessions.getAttribute("NAME");
+
+		School schools = teachers.getSchool();
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classNums = classNumDao.filter(schools);
+        req.setAttribute("classNums", classNums);
+        int currentYear = Year.now().getValue();  // 例：2025
+        List<String> entYears = new ArrayList<>();
+        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
+            entYears.add(String.valueOf(i));
+        }
+        req.setAttribute("entYears", entYears);
+        SubjectDao subjectDao = new SubjectDao();
+        List<Subject> subjectList = subjectDao.filter(teachers.getSchool());
+        req.setAttribute("subjectList", subjectList);
 
         System.out.println("=== TestListSubjectExecuteAction: execute start ===");
 
@@ -39,8 +58,8 @@ public class TestListSubjectExecuteAction extends Action {
         School school = teacher.getSchool();
         System.out.println("学校コード: " + school.getCd());
 
-        String entYearStr = req.getParameter("ent_year");
-        String classNum = req.getParameter("class_num");
+        String entYearStr = req.getParameter("entYear");
+        String classNum = req.getParameter("classNum");
         String subjectCd = req.getParameter("subject_cd");
 
         System.out.println("受信パラメータ: ent_year=" + entYearStr + ", class_num=" + classNum + ", subject_cd=" + subjectCd);
@@ -62,7 +81,6 @@ public class TestListSubjectExecuteAction extends Action {
             return "/main/test_list_subject.jsp";
         }
 
-        SubjectDao subjectDao = new SubjectDao();
         Subject subject = subjectDao.get(subjectCd, school);
 
         if (subject == null) {
