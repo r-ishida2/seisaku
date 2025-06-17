@@ -1,5 +1,6 @@
 package scoremanager.main;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import bean.Test;
 import dao.ClassNumDao;
 import dao.StudentDao;
 import dao.SubjectDao;
+import dao.TestDao;
 import tool.Action;
 
 public class TestRegistAction extends Action {
@@ -37,10 +39,10 @@ public class TestRegistAction extends Action {
         System.out.println("[DEBUG] 学校コード: " + school.getCd());
 
         // リクエストパラメータ取得
-        String entYearStr = req.getParameter("ent_year");
-        String classNum = req.getParameter("class_num");
-        String subjectCd = req.getParameter("subject_cd");  // ← name属性と一致させた
-        String noStr = req.getParameter("no");              // ← name属性と一致させた
+        String entYearStr = req.getParameter("entYear");
+        String classNum = req.getParameter("classNum");
+        String subjectCd = req.getParameter("subject_cd");
+        String noStr = req.getParameter("no");
 
         System.out.println("[DEBUG] リクエストパラメータ - ent_year: " + entYearStr);
         System.out.println("[DEBUG] リクエストパラメータ - class_num: " + classNum);
@@ -52,7 +54,6 @@ public class TestRegistAction extends Action {
         req.setAttribute("subject_cd", subjectCd);
         req.setAttribute("no", noStr);
 
-        // entYear を int に変換
         int entYear = 0;
         try {
             entYear = Integer.parseInt(entYearStr);
@@ -82,6 +83,8 @@ public class TestRegistAction extends Action {
                 Subject subject = new Subject();
                 subject.setCd(subjectCd);
 
+                TestDao testDao = new TestDao();
+
                 for (Student student : studentList) {
                     Test test = new Test();
                     test.setStudent(student);
@@ -89,7 +92,14 @@ public class TestRegistAction extends Action {
                     test.setClassNum(student.getClassNum());
                     test.setSubject(subject);
                     test.setNo(no);
-                    test.setPoint(0); // 初期値
+
+                    // 既に登録されたテスト情報があるか確認
+                    Test existingTest = testDao.get(student, subject, school, no);
+                    if (existingTest != null) {
+                        test.setPoint(existingTest.getPoint());
+                    } else {
+                        test.setPoint(0); // 未登録なら初期値0
+                    }
 
                     testList.add(test);
                 }
@@ -102,7 +112,14 @@ public class TestRegistAction extends Action {
             System.out.println("[DEBUG] Testリスト作成スキップ（subject_cd または no が未入力）");
         }
 
-        // JSP に渡す
+        int currentYear = Year.now().getValue();
+        List<String> entYears = new ArrayList<>();
+        for (int i = currentYear - 10; i <= currentYear + 10; i++) {
+            entYears.add(String.valueOf(i));
+        }
+        req.setAttribute("entYears", entYears);
+
+        // JSP へ渡す
         req.setAttribute("subjectList", subjectList);
         req.setAttribute("classNumList", classNumList);
         req.setAttribute("studentList", studentList);
