@@ -49,8 +49,7 @@
 		</c:if>
 		<c:choose>
 			<c:when test="${not empty testList}">
-			  <div>検索結果: ${testList.size()} 件</div>
-
+			   <p>氏名：${student.name}（${student.no}）</p>
 			  <table style="border-collapse: separate; border-spacing: 10px;">
 			    <tr>
 			      <th>科目名</th>
