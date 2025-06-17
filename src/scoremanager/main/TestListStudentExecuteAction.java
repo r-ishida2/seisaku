@@ -31,12 +31,14 @@ public class TestListStudentExecuteAction extends Action {
         ClassNumDao classNumDao = new ClassNumDao();
         List<String> classNums = classNumDao.filter(schools);
         req.setAttribute("classNums", classNums);
+
         int currentYear = Year.now().getValue();  // 例：2025
         List<String> entYears = new ArrayList<>();
         for (int i = currentYear - 10; i <= currentYear + 10; i++) {
             entYears.add(String.valueOf(i));
         }
         req.setAttribute("entYears", entYears);
+
         SubjectDao subjectDao = new SubjectDao();
         List<Subject> subjectList = subjectDao.filter(teachers.getSchool());
         req.setAttribute("subjectList", subjectList);
@@ -81,6 +83,7 @@ public class TestListStudentExecuteAction extends Action {
 
 	    for (Subject subject : subjects) {
 	        System.out.println("---- 科目: " + subject.getCd() + " / " + subject.getName());
+
 	        for (int pointNo = 1; pointNo <= 3; pointNo++) {
 	            List<Test> partial = testDao.filter(
 	                student.getEntYear(),
@@ -90,12 +93,15 @@ public class TestListStudentExecuteAction extends Action {
 	                school
 	            );
 	            System.out.println("  → 回数: " + pointNo + " 件数: " + partial.size());
+
 	            for (Test test : partial) {
-	                // ★ 科目情報をTestに紐づける（重要）
-	                test.setSubject(subject);
-	                System.out.println("    - 点数: " + test.getPoint() + " 科目: " + test.getSubject().getName() + " 回数: " + test.getNo());
+	                // === 修正ポイント: student番号で一致するものだけ追加 ===
+	                if (test.getStudent().getNo().equals(student.getNo())) {
+	                    test.setSubject(subject);  // 科目名表示用にセット
+	                    testList.add(test);
+	                    System.out.println("    - 点数: " + test.getPoint() + " 科目: " + test.getSubject().getName() + " 回数: " + test.getNo());
+	                }
 	            }
-	            testList.addAll(partial);
 	        }
 	    }
 
