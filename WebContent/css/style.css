@@ -396,3 +396,134 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
+/* 検索フォーム全体 */
+.search-form {
+    margin-bottom: 30px;
+    background-color: #fafafa;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* 各行間の余白 */
+    align-items: flex-end; /* 下揃えにして統一感 */
+}
+
+/* 各検索項目ブロック（入学年度、クラス、氏名など） */
+.search-form .form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+}
+
+/* ラベルの共通スタイル */
+.search-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* 入力欄・セレクトボックス共通 */
+.search-form input[type="text"],
+.search-form select {
+    padding: 6px 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* チェックボックス横並び */
+.checkbox-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 絞り込みボタンの調整（位置や見た目） */
+.submit-button {
+    padding: 8px 20px;
+    font-size: 14px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 38px;
+}
+
+/* ホバー時 */
+.submit-button:hover {
+    background-color: #333;
+}
+
+/* スマホ対応：縦並びに切り替え */
+@media screen and (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .search-form .form-group {
+        width: 100%;
+    }
+
+    .submit-button {
+        width: 100%;
+    }
+}
+/* 学生一覧テーブルのスタイル */
+.student-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* 軽い影で浮かせる */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ヘッダー行 */
+.student-table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* データ行 */
+.student-table td {
+    padding: 12px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+/* 最後の行の下線を消す */
+.student-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* 行ホバー時に背景色を変える */
+.student-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* 「変更」リンク調整 */
+.student-table a {
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.student-table a:hover {
+    text-decoration: underline;
+}
+.result-count {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #444;
+    font-weight: bold;
+}
+
