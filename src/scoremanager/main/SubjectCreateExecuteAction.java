@@ -23,14 +23,23 @@ public class SubjectCreateExecuteAction extends Action {
         if (teacher == null) {
             return "login.jsp"; // ログインしていない場合はログイン画面へ
         }
-
+        
         // 科目コードが3桁かチェック
         if (cd == null || cd.length() != 3) {
-            request.setAttribute("message", "科目コードは3文字で入力してください。");
+        	request.setAttribute("message", "科目コードは3文字で入力してください。");
+        	request.setAttribute("cd", cd);
+        	request.setAttribute("name", name);
+        	return "/main/subject_create.jsp";
+        }
+        
+     // 科目コードが1〜3文字かつ半角英数字かチェック
+        if (cd == null || !cd.matches("^[\\p{Alnum}]{1,3}$")) {
+            request.setAttribute("message", "科目コードは半角で入力してください。");
             request.setAttribute("cd", cd);
             request.setAttribute("name", name);
             return "/main/subject_create.jsp";
         }
+
 
         School school = teacher.getSchool();
         SubjectDao dao = new SubjectDao();

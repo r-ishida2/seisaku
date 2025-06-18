@@ -60,6 +60,16 @@ public class StudentCreateExecuteAction extends Action {
         String schoolCd = teacher.getSchool().getCd();
         boolean isAttend = (entYear <= LocalDate.now().getYear());
 
+        // 学生番号の形式チェック（半角数字のみ）
+        if (no == null || !no.matches("^[0-9]+$")) {
+            req.setAttribute("message", "学生番号は半角数字のみで入力してください。");
+            req.setAttribute("no", no);
+            req.setAttribute("name", name);
+            req.setAttribute("entYear", entYearStr);
+            req.setAttribute("classNum", classNum);
+            return "/main/student_create.jsp";
+        }
+
         // 学生番号の重複チェック
         StudentDao dao = new StudentDao();
         if (dao.get(no) != null) {

@@ -328,3 +328,71 @@ body {
     text-decoration: underline;
 }
 
+.logout-container {
+    max-width: 500px;
+    margin: 80px auto;
+    padding: 40px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.logout-container h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #333;
+}
+
+.logout-message {
+    background-color: #a8d5c4;
+    color: #004d40;
+    padding: 12px 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.login-link {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-section p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.form-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-inline label {
+  white-space: nowrap;
+}
+
+.form-inline input[type="text"],
+.form-inline select {
+  padding: 4px;
+}
+
+.form-inline button {
+  padding: 4px 12px;
+  background-color: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
