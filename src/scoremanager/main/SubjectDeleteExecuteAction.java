@@ -11,7 +11,8 @@ import dao.SubjectDao;
 import tool.Action;
 
 public class SubjectDeleteExecuteAction extends Action {
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+    @Override
+	public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
         req.setCharacterEncoding("UTF-8");
         String cd = req.getParameter("cd");
 

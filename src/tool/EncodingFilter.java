@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebFilter;
 //@WebFilter(urlPatterns={"/chapter10/filter-sample"})
 public class EncodingFilter implements Filter {
 
+	@Override
 	public void doFilter(
 		ServletRequest request, ServletResponse response,
 		FilterChain chain
@@ -50,6 +51,8 @@ public class EncodingFilter implements Filter {
 
 	}
 
+	@Override
 	public void init(FilterConfig filterConfig) {}
+	@Override
 	public void destroy() {}
 }

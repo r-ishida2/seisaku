@@ -21,7 +21,8 @@ public class FrontController extends HttpServlet {
      * - リクエストのパスを取得し、対応するアクションクラスを動的にロード
      * - executeメソッドを実行し、戻り値のURLへフォワード
      */
-    public void doPost(
+    @Override
+	public void doPost(
         HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
@@ -55,7 +56,8 @@ public class FrontController extends HttpServlet {
      * GETリクエストの処理
      * - doPostメソッドを呼び出して、POSTリクエストと同じ処理を実行
      */
-    public void doGet(
+    @Override
+	public void doGet(
         HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
         doPost(request, response); // GETリクエストもPOSTと同様に処理

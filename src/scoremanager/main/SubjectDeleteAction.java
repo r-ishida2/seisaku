@@ -11,7 +11,8 @@ import dao.SubjectDao;
 import tool.Action;
 
 public class SubjectDeleteAction extends Action {
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+    @Override
+	public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
         String cd = req.getParameter("cd");
 
         // セッションからログイン中の教師を取得

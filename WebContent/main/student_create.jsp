@@ -4,7 +4,7 @@
 	<div class="menu-wrapper">
         <%@ include file="../side.jsp" %>
     </div>
-    <div class="content-container">
+    <div class="content-container student-create">
     <form action="scoremanager.main.StudentCreateExecute.action" method="post">
 	    <h2>学生情報登録</h2>
 	    <label>入学年度</label>
