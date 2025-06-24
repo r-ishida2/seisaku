@@ -22,7 +22,7 @@ public class LoginExecuteAction extends Action {
 
         if (teacher != null) {
             session.setAttribute("NAME", teacher);
-            return "index.jsp";
+            return "menu.jsp";
         } else {
             request.setAttribute("MESSEGE", "IDまたはパスワードが確認できませんでした");
             return "login.jsp";

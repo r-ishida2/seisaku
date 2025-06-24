@@ -8,7 +8,7 @@
 <!-- 左メニューエリア -->
 <div class="side-menu">
   <ul>
-    <li><a href="<c:url value='/index.jsp'/>">メニュー</a></li>
+    <li><a href="<c:url value='/scoremanager/Menu.action'/>">メニュー</a></li>
     <li><a href="<c:url value='/scoremanager/main/StudentList.action'/>">学生管理</a></li>
     <li>成績管理</li>
     <li><a href="<c:url value='/scoremanager/main/TestRegist.action'/>">成績登録</a></li>
